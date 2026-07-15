@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Nastase Trim Shop</title>
+<style>
+/* ============ NASTASE BRAND TOKENS ============ */
+:root{
+  --blue:#0072CE; --blue-dark:#005AA3; --blue-tint:#E5F1FB;
+  --grey:#333F48; --grey2:#7C878E; --lgrey:#D0D3D4; --bg:#F4F5F6;
+  --hivis:#8BC53F; --hivis-dark:#5E8F1E; --hivis-tint:#EFF7E2;
+  --red:#C7402D; --red-tint:#FBEAE7;
+  --amber:#D98E04; --amber-tint:#FBF2DE;
+  --green-ok:#2E7D32; --green-tint:#E6F2E7;
+  --radius:10px; --tap:52px;
+  --font-head:'Arial Narrow','Helvetica Neue Condensed','Roboto Condensed',Arial,sans-serif;
+  --font-body:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --font-num:'SF Mono','Roboto Mono',Consolas,'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:17px}
+body{font-family:var(--font-body);color:var(--grey);background:var(--bg);min-height:100vh}
+button{font-family:inherit;font-size:1rem;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:1.05rem;color:var(--grey)}
+h1,h2,h3{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.02em}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+
+#app{max-width:900px;margin:0 auto;padding-bottom:90px}
+.topbar{position:sticky;top:0;z-index:50;background:var(--grey);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:4px solid var(--lgrey)}
+.topbar.req{border-bottom-color:var(--blue)}
+.topbar.shop{border-bottom-color:var(--hivis)}
+.topbar .brand{font-family:var(--font-head);font-weight:bold;font-size:1.1rem;text-transform:uppercase;letter-spacing:.04em;line-height:1.05;min-width:0}
+.topbar .brand small{display:block;font-size:.6rem;letter-spacing:.2em;color:var(--lgrey);font-weight:normal}
+.topbar .mode{margin-left:auto;font-family:var(--font-head);text-transform:uppercase;font-size:.78rem;padding:6px 10px;border-radius:6px;font-weight:bold;flex:none}
+.mode.req{background:var(--blue);color:#fff}
+.mode.shop{background:var(--hivis);color:#1E2A12}
+.topbar .iconbtn{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#fff;font-size:1.15rem;flex:none}
+.topbar .iconbtn:active{background:rgba(255,255,255,.15)}
+.wrap{padding:16px 14px}
+.nlogo{width:32px;height:32px;flex:none}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:12px 16px;border-radius:var(--radius);font-weight:700;font-size:1.05rem;text-align:center;user-select:none}
+.btn:active{transform:scale(.985);filter:brightness(.93)}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.shopmain{background:var(--hivis);color:#1E2A12}
+.btn.ghost{background:#fff;border:2px solid var(--lgrey);color:var(--grey)}
+.btn.ghost.blue{border-color:var(--blue);color:var(--blue)}
+.btn.ghost.green{border-color:var(--hivis-dark);color:var(--hivis-dark)}
+.btn.danger{background:var(--red-tint);color:var(--red);border:2px solid var(--red)}
+.btn.block{width:100%}
+.btn.sm{min-height:44px;font-size:.95rem;padding:8px 12px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.btnrow .btn{flex:1;min-width:130px}
+
+.card{background:#fff;border:1px solid var(--lgrey);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.ordercard{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--lgrey);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(51,63,72,.06)}
+.ordercard:active{background:#F7F9FA}
+.ordercard .toprow{display:flex;align-items:baseline;gap:10px}
+.ordercard .proj{font-weight:800;font-size:1.1rem;flex:1;min-width:0;overflow-wrap:anywhere}
+.ordercard .meta{color:var(--grey2);font-size:.9rem;margin-top:4px;display:flex;gap:12px;flex-wrap:wrap}
+.ordercard .flags{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+.st-received{background:#EDEFF0;color:var(--grey)}
+.st-scheduled{background:var(--blue-tint);color:var(--blue-dark)}
+.st-onhold{background:var(--amber-tint);color:var(--amber)}
+.st-production{background:var(--hivis-tint);color:var(--hivis-dark)}
+.st-ready{background:var(--green-tint);color:var(--green-ok)}
+.st-done{background:var(--grey);color:#fff}
+.st-cancelled{background:#EDEFF0;color:var(--grey2);text-decoration:line-through}
+.fl-under{background:var(--red-tint);color:var(--red)}
+.fl-over{background:var(--amber-tint);color:var(--amber)}
+.fl-match{background:var(--green-tint);color:var(--green-ok)}
+.fl-msg{background:var(--blue-tint);color:var(--blue-dark)}
+.fl-late{background:var(--red);color:#fff}
+
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
+.fchip{flex:none;min-height:44px;padding:8px 14px;border-radius:999px;border:2px solid var(--lgrey);background:#fff;font-weight:700;font-size:.92rem;color:var(--grey);display:flex;align-items:center;gap:7px}
+.fchip.on.req{background:var(--blue);border-color:var(--blue);color:#fff}
+.fchip.on.shop{background:var(--hivis);border-color:var(--hivis);color:#1E2A12}
+.fchip .cnt{font-family:var(--font-num);font-size:.82rem;background:rgba(0,0,0,.12);border-radius:999px;padding:1px 7px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:700;font-size:.86rem;text-transform:uppercase;letter-spacing:.04em;color:var(--grey2);margin-bottom:5px}
+.field input[type=text],.field input[type=date],.field input[type=time],.field input[type=number],.field select,.field textarea{
+  width:100%;min-height:var(--tap);padding:10px 12px;border:2px solid var(--lgrey);border-radius:8px;background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue)}
+.shopview .field input:focus,.shopview .field select:focus,.shopview .field textarea:focus{border-color:var(--hivis-dark)}
+.field .hint{font-size:.85rem;color:var(--grey2);margin-top:4px;line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+.req-mark{color:var(--red)}
+.seg{display:flex;border:2px solid var(--lgrey);border-radius:10px;overflow:hidden;background:#fff}
+.seg button{flex:1;min-height:var(--tap);font-weight:700;color:var(--grey2)}
+.seg button.on{background:var(--blue);color:#fff}
+.shopview .seg button.on{background:var(--hivis);color:#1E2A12}
+
+.catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.catbtn{background:#fff;border:2px solid var(--lgrey);border-radius:var(--radius);min-height:64px;padding:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;font-size:.94rem}
+.catbtn:active{border-color:var(--blue);background:var(--blue-tint)}
+.catbtn .sub{font-weight:400;font-size:.76rem;color:var(--grey2)}
+.itembtn{background:#fff;border:2px solid var(--lgrey);border-radius:var(--radius);min-height:76px;padding:10px;display:flex;align-items:center;gap:12px;text-align:left;font-weight:700;width:100%;margin-bottom:8px}
+.itembtn:active{border-color:var(--blue);background:var(--blue-tint)}
+.itembtn .alias{display:block;font-weight:400;font-size:.8rem;color:var(--grey2)}
+.profile-svg{width:52px;height:40px;stroke:var(--grey);stroke-width:3;fill:none;stroke-linecap:square;stroke-linejoin:miter;flex:none}
+
+/* labeled trim diagrams */
+.bigdiag{width:100%;max-width:360px;display:block;margin:2px auto 12px;background:#fff;border:1px dashed var(--lgrey);border-radius:10px}
+.bigdiag .dp{stroke:var(--grey);stroke-width:6;fill:none;stroke-linecap:square;stroke-linejoin:miter}
+.bigdiag .leader{stroke:var(--grey2);stroke-width:1.6}
+.bigdiag .dlabel{font:700 15px var(--font-body);fill:var(--grey)}
+.bigdiag .dimline{stroke:var(--grey2);stroke-width:1.6;stroke-dasharray:5 4}
+
+.dimrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dimrow .dimlabel{flex:none;width:96px;font-weight:700;font-size:.95rem}
+.fracinput{flex:1;display:flex;gap:6px;align-items:center}
+.fracinput .whole{width:72px;min-height:var(--tap);text-align:center;font-family:var(--font-num);font-size:1.25rem;border:2px solid var(--lgrey);border-radius:8px;background:#fff}
+.fracbtn{flex:1;min-height:var(--tap);border:2px solid var(--lgrey);border-radius:8px;background:#fff;font-family:var(--font-num);font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.fracbtn:active{border-color:var(--blue)}
+.fracgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:6px 0}
+.fracgrid button{min-height:54px;border:2px solid var(--lgrey);border-radius:8px;background:#fff;font-family:var(--font-num);font-size:1.1rem;font-weight:700}
+.fracgrid button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.lenrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lenrow input{width:76px;min-height:var(--tap);text-align:center;font-family:var(--font-num);font-size:1.25rem;border:2px solid var(--lgrey);border-radius:8px;background:#fff}
+.lenrow .unit{font-family:var(--font-num);font-size:1.15rem;color:var(--grey2)}
+
+.li-card{background:#fff;border:2px solid var(--lgrey);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.li-card.active{border-color:var(--hivis);box-shadow:0 0 0 3px var(--hivis-tint)}
+.li-head{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:13px;min-height:64px}
+.li-head:active{background:#F7F9FA}
+.li-head .name{font-weight:800;font-size:1.08rem}
+.li-head .qtybox{text-align:right;flex:none}
+.li-head .qtybox .big{font-family:var(--font-num);font-size:1.25rem;font-weight:700}
+.li-head .qtybox .lbl{font-size:.7rem;color:var(--grey2);text-transform:uppercase;letter-spacing:.05em}
+.li-body{border-top:1px solid var(--lgrey);padding:14px;background:#FCFDFB}
+.activebanner{background:var(--hivis);color:#1E2A12;font-weight:800;text-transform:uppercase;font-size:.82rem;letter-spacing:.04em;padding:7px 13px}
+.specline{font-family:var(--font-num);font-size:1rem;background:#fff;border:1px dashed var(--lgrey);border-radius:8px;padding:10px 12px;margin-bottom:12px;line-height:1.6;overflow-wrap:anywhere}
+.runrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.runpill{display:flex;align-items:center;border:2px solid var(--lgrey);border-radius:8px;overflow:hidden;background:#fff}
+.runpill .rq{font-family:var(--font-num);font-weight:700;font-size:1.05rem;padding:9px 12px;min-height:48px;display:flex;align-items:center;gap:6px}
+.runpill .rq small{font-family:var(--font-body);font-weight:400;color:var(--grey2);font-size:.72rem}
+.runpill .rx{min-width:44px;min-height:48px;border-left:1px solid var(--lgrey);color:var(--grey2);font-size:1.05rem;display:flex;align-items:center;justify-content:center}
+.runpill .rx:active{background:var(--blue-tint)}
+.logrow{display:flex;gap:8px;margin:6px 0 4px;flex-wrap:wrap}
+.logrow input{width:104px;min-height:56px;text-align:center;font-family:var(--font-num);font-size:1.5rem;font-weight:700;border:2px solid var(--hivis-dark);border-radius:10px;background:#fff}
+.logrow .bump{min-width:54px;min-height:56px;border:2px solid var(--lgrey);border-radius:10px;background:#fff;font-family:var(--font-num);font-weight:700;font-size:1.05rem}
+.logrow .bump:active{background:var(--hivis-tint)}
+.tally{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:1rem}
+.tally .built{font-family:var(--font-num);font-size:1.5rem;font-weight:800}
+.progress{height:10px;background:#EDEFF0;border-radius:999px;flex:1;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--hivis);border-radius:999px}
+.progress i.over{background:var(--amber)}
+.progress i.done{background:var(--green-ok)}
+
+.msgthread{margin-top:6px}
+.msg{max-width:88%;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:.96rem;line-height:1.35;overflow-wrap:anywhere}
+.msg .who{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;opacity:.7;margin-bottom:2px}
+.msg.shop{background:var(--hivis-tint);border:1px solid var(--hivis);margin-right:auto}
+.msg.requester{background:var(--blue-tint);border:1px solid var(--blue);margin-left:auto}
+.msgcompose{display:flex;gap:8px;margin-top:8px}
+.msgcompose input{flex:1;min-width:0;min-height:var(--tap);border:2px solid var(--lgrey);border-radius:10px;padding:8px 12px}
+
+.photorow{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.photorow img{width:104px;height:104px;object-fit:cover;border-radius:8px;border:1px solid var(--lgrey)}
+.photorow img:active{opacity:.8}
+
+.sheetback{position:fixed;inset:0;background:rgba(51,63,72,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:900px;border-radius:16px 16px 0 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;position:relative}
+.sheet h3{margin-bottom:12px;font-size:1.15rem;padding-right:44px}
+.sheet .closex{position:absolute;right:10px;top:10px;font-size:1.35rem;min-width:44px;min-height:44px}
+
+.gate{min-height:100vh;background:var(--grey);color:#fff;display:flex;flex-direction:column;align-items:center;padding:36px 20px calc(20px + env(safe-area-inset-bottom))}
+.gate h1{font-size:1.7rem;letter-spacing:.05em;text-align:center}
+.gate .tag{color:var(--lgrey);letter-spacing:.26em;font-size:.7rem;text-transform:uppercase;margin-bottom:38px}
+.rolebtns{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:620px}
+@media(max-width:560px){.rolebtns{grid-template-columns:1fr}}
+.rolebtn{border-radius:14px;padding:26px 16px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.rolebtn .rname{font-family:var(--font-head);text-transform:uppercase;font-weight:800;font-size:1.45rem;letter-spacing:.04em}
+.rolebtn .rdesc{font-size:.9rem;opacity:.92}
+.rolebtn.req{background:var(--blue);color:#fff}
+.rolebtn.shop{background:var(--hivis);color:#1E2A12}
+.rolebtn:active{transform:scale(.98)}
+.gate .foot{margin-top:auto;color:var(--grey2);font-size:.78rem;text-align:center;line-height:1.5;padding-top:28px}
+.pinpad{display:grid;grid-template-columns:repeat(3,80px);gap:12px;justify-content:center;margin-top:18px}
+.pinpad button{width:80px;height:68px;border-radius:12px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--font-num);font-size:1.55rem;font-weight:700}
+.pinpad button:active{background:rgba(255,255,255,.28)}
+.pindots{display:flex;gap:14px;justify-content:center;margin:24px 0 6px;min-height:18px}
+.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid #fff}
+.pindots i.full{background:#fff}
+.pinerr{color:#FF9C8A;min-height:24px;text-align:center;font-weight:700}
+
+.empty{text-align:center;padding:44px 20px;color:var(--grey2)}
+.empty .big{font-size:2.5rem;margin-bottom:10px}
+.empty h3{color:var(--grey);margin-bottom:8px;font-size:1.15rem}
+.empty p{max-width:420px;margin:0 auto 18px;line-height:1.5}
+
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--grey);color:#fff;padding:12px 20px;border-radius:14px;font-weight:700;z-index:300;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center;line-height:1.35}
+#toast.show{opacity:1}
+#offlinebanner{background:var(--amber-tint);color:var(--amber);font-weight:700;font-size:.85rem;text-align:center;padding:7px 12px;display:none}
+
+.stickybar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--lgrey);padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:60}
+.stickybar .inner{max-width:900px;margin:0 auto;display:flex;gap:10px}
+.stickybar .btn{flex:1}
+
+.secHead{display:flex;align-items:center;gap:10px;margin:20px 0 10px}
+.secHead h2{font-size:1.02rem;color:var(--grey);flex:none}
+.secHead .rule{flex:1;height:2px;background:var(--lgrey)}
+.kv{display:flex;gap:8px;font-size:.95rem;margin-bottom:4px}
+.kv b{min-width:112px;color:var(--grey2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;padding-top:2px;flex:none}
+.kv span{overflow-wrap:anywhere}
+
+/* status control */
+.statusbig{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+.statusbig .chip{font-size:.95rem;padding:8px 16px}
+.statuslist button{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:10px 14px;border:2px solid var(--lgrey);border-radius:10px;background:#fff;margin-bottom:8px;text-align:left;font-weight:700;font-size:1.02rem}
+.statuslist button:active{background:var(--hivis-tint);border-color:var(--hivis)}
+.statuslist button.cur{border-color:var(--grey);background:#F1F3F4}
+.statuslist .sdesc{font-weight:400;font-size:.82rem;color:var(--grey2);display:block}
+.holdreasons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.holdreasons button{border:2px solid var(--lgrey);border-radius:999px;background:#fff;min-height:46px;padding:8px 14px;font-weight:700;font-size:.92rem}
+.holdreasons button.on{background:var(--amber-tint);border-color:var(--amber);color:var(--amber)}
+
+/* spreadsheet view */
+.tablewrap{overflow-x:auto;background:#fff;border:1px solid var(--lgrey);border-radius:var(--radius);-webkit-overflow-scrolling:touch}
+table.sheetv{border-collapse:collapse;width:100%;min-width:900px;font-size:.88rem}
+table.sheetv th{position:sticky;top:0;background:var(--grey);color:#fff;text-align:left;padding:9px 10px;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;cursor:pointer;user-select:none}
+table.sheetv th .arr{opacity:.85;font-size:.8rem}
+table.sheetv td{border-bottom:1px solid var(--lgrey);padding:8px 10px;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+table.sheetv tr:active td{background:var(--blue-tint)}
+.sheettools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sheettools select,.sheettools input{min-height:46px;border:2px solid var(--lgrey);border-radius:8px;padding:6px 10px;background:#fff}
+.sheettools input{flex:1;min-width:140px}
+
+/* wide layouts (kanban / spreadsheet / calendar) */
+body.wide #app{max-width:none}
+body.wide .wrap{padding:16px 18px}
+
+/* kanban board */
+.kbtools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.kb{display:flex;gap:12px;align-items:flex-start;overflow-x:auto;padding-bottom:14px;-webkit-overflow-scrolling:touch}
+.kbcol{flex:0 0 252px;background:#E9EBEC;border-radius:12px;padding:9px;min-height:120px}
+.kbcol h4{font-family:var(--font-head);text-transform:uppercase;font-size:.8rem;letter-spacing:.05em;display:flex;align-items:center;gap:7px;margin:2px 4px 9px;color:var(--grey)}
+.kbcol h4 .cnt{font-family:var(--font-num);font-size:.75rem;background:rgba(51,63,72,.12);border-radius:999px;padding:1px 7px;margin-left:auto}
+.kbcol.dragover{outline:3px dashed var(--hivis);outline-offset:-3px;background:var(--hivis-tint)}
+.kbcard{background:#fff;border:1px solid var(--lgrey);border-radius:9px;padding:9px 10px;margin-bottom:8px;cursor:grab;box-shadow:0 1px 2px rgba(51,63,72,.08);width:100%;text-align:left;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.kbcard:active{cursor:grabbing;background:#F7F9FA}
+.kbcard.dragging{opacity:.35}
+.kbcard .kbtitle{font-weight:800;font-size:.95rem;line-height:1.25;overflow-wrap:anywhere}
+.kbcard .kbmeta{font-size:.78rem;color:var(--grey2);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
+.kbcard .flags{margin-top:5px;display:flex;gap:4px;flex-wrap:wrap}
+.kbcard .flags .chip{font-size:.66rem;padding:2px 8px}
+.kbempty{color:var(--grey2);font-size:.82rem;text-align:center;padding:14px 4px}
+.kbghost{position:fixed;z-index:9999;pointer-events:none;opacity:.92;box-shadow:0 10px 28px rgba(51,63,72,.35);transform:scale(1.03);margin:0!important}
+@media (max-width:600px){
+  .kbcol{flex:0 0 82vw;max-width:340px}
+  .kb{gap:10px;scroll-snap-type:x proximity}
+  .kbcol{scroll-snap-align:start}
+}
+
+/* calendar */
+.calhead{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.calhead h2{font-size:1.2rem}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:transparent}
+.caldow{font-family:var(--font-head);text-transform:uppercase;font-size:.72rem;letter-spacing:.06em;color:var(--grey2);text-align:center;padding:4px 0}
+.calcell{background:#fff;border:1px solid var(--lgrey);border-radius:8px;min-height:96px;padding:5px;font-size:.8rem;overflow:hidden}
+.calcell.other{background:#F1F3F4;opacity:.6}
+.calcell.today{border-color:var(--blue);border-width:2px}
+.calcell .dnum{font-family:var(--font-num);font-weight:700;color:var(--grey2);margin-bottom:3px}
+.calcell.today .dnum{color:var(--blue)}
+.calchip{display:block;width:100%;text-align:left;border:0;border-radius:6px;padding:3px 6px;margin-bottom:3px;font-size:.72rem;font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.calchip.sched{background:#fff;border:1.5px dashed var(--blue);color:var(--blue-dark)}
+.callegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.82rem;color:var(--grey2);align-items:center}
+
+/* reference */
+.refwrap table{border-collapse:collapse;width:100%;background:#fff;font-size:.9rem}
+.refwrap th{background:var(--grey);color:#fff;text-align:left;padding:9px 10px;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
+.refwrap td{border-bottom:1px solid var(--lgrey);padding:8px 10px;vertical-align:top}
+.refwrap td.num{white-space:nowrap}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px}
+.refcard{background:#fff;border:1px solid var(--lgrey);border-radius:10px;padding:12px}
+.refcard h4{font-family:var(--font-head);text-transform:uppercase;font-size:.9rem;margin-bottom:6px}
+
+.printonly{display:none}
+@media print{
+  body{background:#fff}
+  #app>*:not(.printonly){display:none!important}
+  .printonly{display:block;padding:0;font-size:12px;color:#000}
+  .printonly h1{font-size:18px;margin-bottom:2px}
+  .printonly table{width:100%;border-collapse:collapse;margin:10px 0}
+  .printonly th,.printonly td{border:1px solid #555;padding:5px 7px;text-align:left;font-size:11px}
+  .printonly .signline{display:inline-block;border-bottom:1px solid #000;min-width:200px;margin-left:6px}
+  .printonly .signrow{margin:16px 0}
+}
+</style>
+</head>
+<body>
+<div id="offlinebanner"></div>
+<div id="app"></div>
+<div id="toast"></div>
+
+<!-- Supabase JS client — this is what makes the tool work for anyone,
+     from any device, with no Claude account. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+/* =====================================================================
+   NASTASE CONTRACTING — METAL TRIM SHOP  (v3 — Supabase backend)
+   !! The PIN gate is a convenience gate for trusted internal users only.
+   !! It is NOT real authentication — anyone with this page's URL and the
+   !! two constants below could read/write the data directly. Keep the
+   !! URL inside the company for now (see the setup notes you were given).
+   ===================================================================== */
+const PINS = { requester: '1977', shop: '5199' };   // <-- change PINs here
+
+/* ---- Supabase project config — paste your own values here ---- */
+const SUPABASE_URL = 'https://dljsvxeavutsjxtnvojn.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsanN2eGVhdnV0c2p4dG52b2puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxMzg1MzUsImV4cCI6MjA5OTcxNDUzNX0.T93lhLNw2ORa8pTmcSJ9622ZwL9QcCbyhjzemgRWxBU';
+
+/* =====================================================================
+   STORAGE ADAPTER — Supabase-backed, no Claude account required.
+   - shared=true  (orders, the order index, photos) → synced through a
+     Supabase table ("kv_store") that every device hitting this page can
+     read and write. This is what makes Office and Shop see the same data.
+   - shared=false (which role this device is, the in-progress draft, the
+     last "ran by" name) → localStorage only, on purpose. Each device
+     should remember its own role/draft, not share it.
+   Every shared write/read also mirrors to localStorage as a cache, so a
+   dropped connection doesn't lose data — it just delays the sync and
+   shows the banner at the top of the screen until it's reachable again.
+   ===================================================================== */
+const SB_READY = !!(window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
+  && SUPABASE_URL.indexOf('YOUR_')!==0 && SUPABASE_ANON_KEY.indexOf('YOUR_')!==0);
+const sb = SB_READY ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+let LS_OK=true; try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }catch(e){ LS_OK=false }
+const MEM={};
+let SB_ONLINE = SB_READY;
+
+function setOnline(ok){
+  if(ok===SB_ONLINE) return;
+  SB_ONLINE=ok;
+  const b=document.getElementById('offlinebanner'); if(!b) return;
+  if(!SB_ONLINE){ b.textContent='\u26A0 Can\u2019t reach the server right now \u2014 working from a local copy on this device. Changes will sync once you\u2019re back online.'; b.style.display='block'; }
+  else b.style.display='none';
+}
+
+async function rawGet(key,shared){
+  if(shared && SB_READY){
+    try{
+      const {data,error}=await sb.from('kv_store').select('value').eq('key',key).maybeSingle();
+      if(error) throw error;
+      setOnline(true);
+      if(data){ if(LS_OK) try{ localStorage.setItem(key,data.value) }catch(e){} return data.value }
+      return null;
+    }catch(e){ setOnline(false); /* fall through to whatever's cached locally */ }
+  }
+  if(LS_OK){ const v=localStorage.getItem(key); if(v!==null)return v; }
+  return (key in MEM)?MEM[key]:null;
+}
+async function rawSet(key,val,shared){
+  if(LS_OK){ try{ localStorage.setItem(key,val) }catch(e){ MEM[key]=val; } } else { MEM[key]=val; }
+  if(shared && SB_READY){
+    try{
+      const {error}=await sb.from('kv_store').upsert({key,value:val,updated_at:new Date().toISOString()});
+      if(error) throw error;
+      setOnline(true); return true;
+    }catch(e){ setOnline(false); return true; /* saved locally at least — will retry next save */ }
+  }
+  return true;
+}
+async function rawDel(key,shared){
+  if(LS_OK) try{ localStorage.removeItem(key) }catch(e){}
+  delete MEM[key];
+  if(shared && SB_READY){
+    try{ const {error}=await sb.from('kv_store').delete().eq('key',key); if(error) throw error; setOnline(true) }
+    catch(e){ setOnline(false) }
+  }
+}
+async function sload(key,shared){ const v=await rawGet(key,shared); if(v==null)return null; try{return JSON.parse(v)}catch(e){return null} }
+async function ssave(key,val,shared){ return rawSet(key,JSON.stringify(val),shared) }
+async function sdel(key,shared){ return rawDel(key,shared) }
+
+/* ---------------- catalog ---------------- */
+const CATALOG = [
+ {cat:'Flashing & Trim', items:[
+   {id:'z-flash', name:'Z Flashing', alias:'Z Metal · Backer Z (scrap color OK)', profile:'z',
+    dims:[d('Top leg',2,0),d('Web',1,0),d('Bottom leg',2,0)]},
+   {id:'l-metal', name:'L Metal', alias:'L Flashing / Angle — single or double', profile:'l',
+    dims:[d('Leg A',2,0),d('Leg B',1,8),d('Hem',0,8)]},
+   {id:'drip', name:'Drip Edge', alias:'Drip Metal — std, groove, or kick-out', profile:'drip',
+    dims:[d('Face',2,0),d('Top',1,2),d('Kick',0,8)]},
+   {id:'d-style', name:'D-Style Drip', profile:'dstyle', dims:[d('Face',0,0),d('Top',0,0)]},
+   {id:'wall-flash', name:'Wall Flashing', alias:'Sidewall / Headwall', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'brick-flash', name:'Brick Flashing', alias:'Brick Cap Metal / Masonry', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'apron-flash', name:'Apron Flashing', alias:'Continuous Flashing', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
+   {id:'step-flash', name:'Step Flashing', alias:'roof-to-wall, chimneys, dormers', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'counter-flash', name:'Counter Flashing', alias:'Reglet Flashing', profile:'fakej', dims:[d('Lip',0,8),d('Face',0,0),d('Kick',0,0)]},
+   {id:'kickout', name:'Kick-out Flashing', alias:'sketch or photo helps', profile:'custom', dims:[]},
+   {id:'gravel-stop', name:'Gravel Stop', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
+ ]},
+ {cat:'Channels & J-Trims', items:[
+   {id:'j-channel', name:'J Channel', profile:'j',
+    dims:[d('Face',2,0),d('Channel',1,8),d('Return',0,8),d('Opening',1,2)]},
+   {id:'fake-j', name:'Fake J', profile:'fakej', dims:[d('Hem',0,8),d('Face',1,8),d('Leg',0,8)]},
+   {id:'u-channel', name:'U Channel', profile:'u', dims:[d('Leg A',0,0),d('Base',0,0),d('Leg B',0,0)]},
+   {id:'custom-channel', name:'Custom Channel', alias:'describe or sketch it', profile:'custom', dims:[]},
+ ]},
+ {cat:'Caps & Coping', items:[
+   {id:'coping-cap', name:'Coping Cap', alias:'parapet / wall — any width & slope', profile:'cap', dims:[d('Face A',0,0),d('Top',0,0),d('Face B',0,0)]},
+   {id:'roof-cap', name:'Roof / Ridge / Hip Cap', profile:'ridge', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'brick-cap', name:'Brick Cap', profile:'cap', dims:[d('Face A',0,0),d('Top',0,0),d('Face B',0,0)]},
+   {id:'custom-cap', name:'Custom Cap (per spec)', alias:'sketch or photo required', profile:'custom', dims:[]},
+ ]},
+ {cat:'Cleats, Clips & Accessories', items:[
+   {id:'coping-cleat', name:'Coping Cleat', alias:'Lock Strip', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'cleat', name:'Cleat', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'cap-clip', name:'Cap Clip', profile:'u', dims:[d('Leg A',0,0),d('Base',0,0),d('Leg B',0,0)]},
+   {id:'rake-cleat', name:'Rake Cleat', alias:'or other custom cleat', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+ ]},
+ {cat:'Valleys', items:[
+   {id:'valley-std', name:'Roof Valley (Standard)', alias:'open or closed per spec', profile:'valley', dims:[d('Leg A',12,0),d('Leg B',12,0),d('Center crimp',1,0)]},
+   {id:'valley-brava', name:'Roof Valley (Brava)', alias:'W-style, per Brava detail', profile:'valley',
+    dims:[d('Leg A',12,0),d('Leg B',12,0),d('Center crimp',1,0)],
+    specNote:'Per Brava detail: 24\u2033 wide minimum \u201CW\u201D style, 1\u2033 center crimp, 24\u201326 gauge recommended. Valley metal extends 12\u2033 each side of valley center. Fasteners approx. 5\u2033 from center of valley.'},
+   {id:'valley-custom', name:'Custom Valley Profile', alias:'describe or sketch it', profile:'valley', dims:[d('Leg A',0,0),d('Leg B',0,0),d('Center crimp',0,0)]},
+ ]},
+ {cat:'Gutters, Fascia & Drainage', items:[
+   {id:'gutter', name:'Custom Bent Gutter', alias:'box / custom profile — not roll-formed K-style', profile:'u', dims:[d('Back',0,0),d('Bottom',0,0),d('Front',0,0)]},
+   {id:'gutter-apron', name:'Gutter Apron', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
+   {id:'fascia', name:'Fascia', alias:'bent fascia cover / trim', profile:'l', dims:[d('Face',0,0),d('Return',0,0)]},
+   {id:'scupper', name:'Scupper', alias:'through-wall / parapet drain — sketch required', profile:'custom', dims:[]},
+ ]},
+ {cat:'Corners & Special Shapes', items:[
+   {id:'inside-corner', name:'Inside Corner', profile:'incorner', dims:[d('Leg A',2,0),d('Leg B',2,0),d('Hems',0,8)]},
+   {id:'outside-corner', name:'Outside Corner', profile:'outcorner', dims:[d('Leg A',2,0),d('Leg B',2,0),d('Hems',0,8)]},
+   {id:'box-corner', name:'Box / Mitered Corner', alias:'sketch or photo required', profile:'custom', dims:[]},
+ ]},
+ {cat:'Custom Bends & Specialty', items:[
+   {id:'hem', name:'Hemmed Edge', alias:'safety + rigidity — most profiles', profile:'hem', dims:[d('Width',0,0),d('Hem',0,8)]},
+   {id:'custom', name:'Custom Profile', alias:'drawing, dims, angles, or template', profile:'custom', dims:[]},
+   {id:'specialty', name:'Specialty Item', alias:'cricket, pan, transition, etc.', profile:'custom', dims:[]},
+ ]},
+];
+const CUSTOM_IDS=['custom','specialty','kickout','scupper','box-corner','custom-channel','custom-cap','valley-custom'];
+function d(label,w,s){return {label, w, s}}
+function findItem(id){for(const c of CATALOG){const f=c.items.find(i=>i.id===id);if(f)return f}return null}
+
+/* small profile icons */
+const PROFILES = {
+ z:'M8 10 H30 V32 H52', j:'M16 6 V36 H40 V26', l:'M14 6 V36 H50',
+ fakej:'M22 12 V6 H16 M22 12 V36 H44 V30', u:'M14 8 V34 H46 V8',
+ cap:'M10 34 V12 H50 V34', incorner:'M12 6 V36 H48 M12 12 H18 M42 36 V30',
+ outcorner:'M12 36 V6 H48 M12 30 H18 M42 6 V12', valley:'M6 10 L24 32 L30 24 L36 32 L54 10',
+ ridge:'M8 32 L30 10 L52 32', dstyle:'M16 8 H40 Q52 8 52 20 V34 H40',
+ hem:'M10 24 H50 M50 24 V18 H30', drip:'M14 6 V30 L26 38 M14 10 H34',
+ custom:'M14 30 L24 12 L34 30 M18 24 H30 M42 12 V26 M42 31 V33'
+};
+function profileSVG(p){return `<svg class="profile-svg" viewBox="0 0 60 44"><path d="${PROFILES[p]||PROFILES.l}"/></svg>`}
+
+/* ---------- BIG LABELED DIAGRAMS (spec vocabulary callouts) ----------
+   Keyed by profile. labels[].di maps to the item's dims[] index so the
+   words on the drawing exactly match the input fields below it. */
+const DIAG = {
+ j:{ path:'M120 30 V160 H205 V122',
+     extra:'<line class="dimline" x1="126" y1="105" x2="199" y2="105"/><path d="M126 105 l8 -4 v8 z" fill="#7C878E"/><path d="M199 105 l-8 -4 v8 z" fill="#7C878E"/>',
+     labels:[ {di:0, px:120,py:88,  lx:78, ly:88,  tx:74, ty:93, a:'end'},
+              {di:1, px:162,py:160, lx:162,ly:185, tx:162,ty:190,a:'middle'},
+              {di:2, px:205,py:140, lx:243,ly:140, tx:247,ty:145},
+              {di:3, px:162,py:105, lx:162,ly:70,  tx:162,ty:65, a:'middle'} ]},
+ l:{ path:'M110 30 V160 H240 V146',
+     labels:[ {di:0, px:110,py:90,  lx:74, ly:90,  tx:70, ty:95, a:'end'},
+              {di:1, px:175,py:160, lx:175,ly:186, tx:175,ty:191,a:'middle'},
+              {di:2, px:240,py:152, lx:272,ly:132, tx:274,ty:128} ]},
+ z:{ path:'M60 55 H160 V145 H265',
+     labels:[ {di:0, px:110,py:55,  lx:110,ly:30,  tx:110,ty:25, a:'middle'},
+              {di:1, px:160,py:100, lx:205,ly:82,  tx:209,ty:78},
+              {di:2, px:212,py:145, lx:212,ly:176, tx:212,ty:181,a:'middle'} ]},
+ drip:{ path:'M150 30 H235 M150 30 V140 L188 168',
+     labels:[ {di:0, px:150,py:85,  lx:110,ly:85,  tx:106,ty:90, a:'end'},
+              {di:1, px:192,py:30,  lx:192,ly:60,  tx:196,ty:64},
+              {di:2, px:172,py:156, lx:214,ly:150, tx:218,ty:150} ]},
+ fakej:{ path:'M150 48 V30 H132 M150 48 V152 H215 V138',
+     labels:[ {di:0, px:141,py:30,  lx:104,ly:40,  tx:100,ty:45, a:'end'},
+              {di:1, px:150,py:100, lx:110,ly:110, tx:106,ty:115,a:'end'},
+              {di:2, px:184,py:152, lx:184,ly:182, tx:184,ty:187,a:'middle'} ]},
+ u:{ path:'M115 40 V150 H215 V40',
+     labels:[ {di:0, px:115,py:90,  lx:80, ly:90,  tx:76, ty:95, a:'end'},
+              {di:1, px:165,py:150, lx:165,ly:182, tx:165,ty:187,a:'middle'},
+              {di:2, px:215,py:90,  lx:252,ly:90,  tx:256,ty:95} ]},
+ cap:{ path:'M105 155 V55 H225 V155',
+     labels:[ {di:0, px:105,py:105, lx:70, ly:105, tx:66, ty:110,a:'end'},
+              {di:1, px:165,py:55,  lx:165,ly:30,  tx:165,ty:25, a:'middle'},
+              {di:2, px:225,py:105, lx:262,ly:105, tx:266,ty:110} ]},
+ valley:{ path:'M45 55 L135 150 L160 118 L185 150 L275 55',
+     labels:[ {di:0, px:90, py:100, lx:66, ly:128, tx:62, ty:133,a:'end'},
+              {di:1, px:230,py:100, lx:256,ly:128, tx:260,ty:133},
+              {di:2, px:160,py:120, lx:160,ly:52,  tx:160,ty:47, a:'middle'} ]},
+ incorner:{ path:'M110 30 V160 H245 M110 30 H128 M245 160 V142',
+     labels:[ {di:0, px:110,py:90,  lx:74, ly:90,  tx:70, ty:95, a:'end'},
+              {di:1, px:180,py:160, lx:180,ly:186, tx:180,ty:191,a:'middle'},
+              {di:2, px:121,py:30,  lx:158,ly:38,  tx:162,ty:43} ]},
+ outcorner:{ path:'M110 160 V30 H245 M110 160 H128 M245 30 V48',
+     labels:[ {di:0, px:110,py:95,  lx:74, ly:95,  tx:70, ty:100,a:'end'},
+              {di:1, px:180,py:30,  lx:180,ly:58,  tx:180,ty:63, a:'middle'},
+              {di:2, px:121,py:160, lx:158,ly:152, tx:162,ly:152, ty:157} ]},
+ ridge:{ path:'M55 150 L160 55 L265 150',
+     labels:[ {di:0, px:105,py:105, lx:80, ly:80,  tx:76, ty:75, a:'end'},
+              {di:1, px:215,py:105, lx:240,ly:80,  tx:244,ty:75} ]},
+ hem:{ path:'M75 125 H245 M245 125 V105 H160',
+     labels:[ {di:0, px:160,py:125, lx:160,ly:158, tx:160,ty:163,a:'middle'},
+              {di:1, px:202,py:105, lx:202,ly:70,  tx:202,ty:65, a:'middle'} ]},
+};
+function bigDiagram(item, dims){
+  const D=DIAG[item.profile]; if(!D||!dims||!dims.length) return '';
+  const labels=D.labels.filter(l=>dims[l.di]).map(l=>{
+    const val=dimStr(dims[l.di]); const txt=esc(dims[l.di].label)+(val!=='—'?' '+val:'');
+    return `<line class="leader" x1="${l.px}" y1="${l.py}" x2="${l.lx}" y2="${l.ly}"/>`+
+           `<circle cx="${l.px}" cy="${l.py}" r="3.5" fill="#7C878E"/>`+
+           `<text class="dlabel" x="${l.tx}" y="${l.ty}" text-anchor="${l.a||'start'}">${txt}</text>`;
+  }).join('');
+  return `<svg class="bigdiag" viewBox="0 0 320 200"><path class="dp" d="${D.path}"/>${D.extra||''}${labels}</svg>`;
+}
+
+/* ---------------- colors / gauges ---------------- */
+const PAC_STANDARD = ['Bone White','Stone White','Almond','Sandstone','Sierra Tan','Buckskin','Medium Bronze','Aged Bronze','Dark Bronze','Burnished Slate','Granite','Antique Bronze','Classic Bronze','Midnight Bronze','Mansard Brown','Cityscape','Slate Gray','Musket Gray','Charcoal','Graphite','Black','Iron Ore','Inkwell','Onyx (fka Matte Black)','Traditional Black','Terra Cotta','Colonial Red','Burgundy','Cardinal Red','Military Blue','Pacific Blue (fka Slate Blue)','Interstate Blue','Berkshire Blue','Award Blue','Hemlock Green','Forest Green','Patina Green','Hartford Green','Galvalume Plus'];
+const PAC_PREMIUM = ['Anodic Clear','Silversmith','Silver','Champagne','Weathered Zinc','Copper Penny','Weathered Steel','Brown Timber','Copper Timber','Gray Timber','Tan Timber','White Timber'];
+const TRIMCOIL_COLORS = ['White','Black','Rich Espresso','Natural Slate / Iron Gray','Light Mist','Dove Gray','Parchment','Musket Gray','Almond'];
+const SPECIAL_COLORS = ['Any / Scrap (shop\u2019s choice)'];
+const MATERIALS = ['Pre-finished Steel (PAC-Clad)','Pre-finished Trim Coil / Coil Stock','Galvanized Steel','Mild Steel','Aluminum'];
+function colorsForMaterial(m){
+  if(m==='Pre-finished Steel (PAC-Clad)') return [{g:'PAC-Clad Standard',list:PAC_STANDARD},{g:'PAC-Clad Premium',list:PAC_PREMIUM},{g:'Special',list:SPECIAL_COLORS}];
+  if(m==='Pre-finished Trim Coil / Coil Stock') return [{g:'Trim Coil',list:TRIMCOIL_COLORS},{g:'Special',list:SPECIAL_COLORS}];
+  if(m==='Galvanized Steel') return [{g:'Galvanized',list:['Bare Galvanized','Galvalume Plus']},{g:'Special',list:SPECIAL_COLORS}];
+  if(m==='Mild Steel') return [{g:'Mild Steel',list:['Bare / Mill Finish','Primed','Painted \u2014 note color in notes']},{g:'Special',list:SPECIAL_COLORS}];
+  if(m==='Aluminum') return [{g:'Aluminum',list:['Mill Finish','White','Black','Dark Bronze','Custom \u2014 see notes']},{g:'Special',list:SPECIAL_COLORS}];
+  return [{g:'Special',list:SPECIAL_COLORS}];
+}
+const GAUGES = ['29 ga','26 ga','24 ga','22 ga','20 ga','18 ga'];
+const GAUGE_HINTS = {'29 ga':'Light-duty trim & flashing','26 ga':'Decorative trim \u2014 check die clearance','24 ga':'Standard \u2014 most common','22 ga':'Heavier-duty flashing & caps','20 ga':'Structural \u2014 gutters, coping, high-wind','18 ga':'Specialty \u2014 galvanized Z-girts only'};
+
+/* ---------------- fractions / lengths ---------------- */
+const FRACS = [[0,''],[1,'1/16'],[2,'1/8'],[3,'3/16'],[4,'1/4'],[5,'5/16'],[6,'3/8'],[7,'7/16'],[8,'1/2'],[9,'9/16'],[10,'5/8'],[11,'11/16'],[12,'3/4'],[13,'13/16'],[14,'7/8'],[15,'15/16']];
+function fracLabel(s){const f=FRACS.find(x=>x[0]===s);return f?f[1]:''}
+function dimStr(v){ if(!v) return '—';
+  const w=v.w||0, s=v.s||0;
+  if(w===0&&s===0) return '—';
+  return (w?w:'')+(w&&s?' ':'')+(s?fracLabel(s):'')+'\u2033';
+}
+const MAX_STICK_IN = 120; // hard max: 10 ft — that's the brake bed
+function lenInches(l){ if(!l)return 0; return (l.ft||0)*12 + (l.in||0) + (l.s||0)/16 }
+function lenStr(l){ if(!l)return '—';
+  const parts=[]; if(l.ft) parts.push(l.ft+'\u2032');
+  const inch=(l.in||0), s=(l.s||0);
+  if(inch||s||!l.ft) parts.push((inch?inch:'')+(inch&&s?' ':'')+(s?fracLabel(s):(inch?'':'0'))+'\u2033');
+  return parts.join(' ');
+}
+
+/* ---------------- storage keys ---------------- */
+const KEY_INDEX='trimshop-index';
+const OK=k=>'trimshop-order-'+k;
+const PK=k=>'trimshop-photo-'+k;
+
+/* ---------------- app state ---------------- */
+let ROLE=null, INDEX={seq:1, orders:[]}, VIEW={name:'home'};
+let FILTER='received', RFILTER='open';
+let CUR=null, DRAFT=null, ACTIVE_LI=null, EDIT_I=null;
+let SHEET_SORT={key:'num',dir:-1}, SHEET_STATUS='all', SHEET_Q='';
+let RUNBY='Randy', CAL=null, DRAG_ID=null;
+let ALLORDERS=null;
+let photoCache={};
+
+const $=s=>document.querySelector(s);
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3000)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmtDate(iso){ if(!iso) return '—'; const p=iso.split('-'); if(p.length<3)return iso; return `${+p[1]}/${+p[2]}/${p[0].slice(2)}` }
+
+/* ---------------- STATUS MODEL (v2 — per Chuck's workflow) ---------------- */
+const STATUSES=[
+ {id:'received',  label:'Order Received', desc:'Just in from the office — Randy hasn\u2019t looked yet'},
+ {id:'scheduled', label:'Scheduled',      desc:'Reviewed — has an expected completion date'},
+ {id:'onhold',    label:'On Hold',        desc:'Stopped — needs materials, info, or run tracking'},
+ {id:'production',label:'In Production',  desc:'On the brake right now'},
+ {id:'ready',     label:'Ready To Ship',  desc:'Built, checked, staged for pickup/delivery'},
+ {id:'done',      label:'Done',           desc:'Delivered or picked up — closed out'},
+ {id:'cancelled', label:'Cancelled',      desc:'Killed by the office — kept for the record'},
+];
+const ST_LABEL={}; STATUSES.forEach(s=>ST_LABEL[s.id]=s.label);
+function totalBuilt(li){ return (li.runs||[]).reduce((a,r)=>a+(r.qty||0),0) }
+function liFlag(li){ const b=totalBuilt(li); if(b===0)return null;
+  if(b<li.qtyOrdered)return 'under'; if(b>li.qtyOrdered)return 'over'; return 'match' }
+function hasOpenQuestion(o){ return o.lineItems.some(li=>{const m=li.messages||[];return m.length&&m[m.length-1].from==='shop'}) }
+function hasNewReply(o){ return o.lineItems.some(li=>{const m=li.messages||[];return m.length&&m[m.length-1].from==='requester'}) }
+function isLate(o){ return !['done','cancelled'].includes(o.status)&&o.dueDate&&o.dueDate<today() }
+function orderLF(o){ return o.lineItems.reduce((a,li)=>a+(li.qtyOrdered||0)*lenInches(li.len)/12,0) }
+function orderBuiltLF(o){ return o.lineItems.reduce((a,li)=>a+totalBuilt(li)*lenInches(li.len)/12,0) }
+
+/* migrate v1 orders (per-line status model) to v2 */
+function migrateOrder(o){
+  if(!o)return o;
+  o.lineItems=o.lineItems||[];
+  o.lineItems.forEach(li=>{
+    if(!li.len) li.len={ft:(li.lengthFt||10), in:0, s:0};
+    if(!li.material) li.material = ({'PAC-Clad':'Pre-finished Steel (PAC-Clad)','Trim Coil (Ply Gem)':'Pre-finished Trim Coil / Coil Stock','Mild Steel (stock)':'Mild Steel','Aluminum (stock)':'Aluminum'})[o.metalBrand] || o.metalBrand || 'Pre-finished Steel (PAC-Clad)';
+    (li.runs||[]).forEach(r=>{ if(r.by===undefined) r.by='' });
+    if(li.built===undefined) li.built=['complete','qc','ready','done'].includes(li.status);
+    li.runs=li.runs||[]; li.messages=li.messages||[]; li.photos=li.photos||[];
+  });
+  if(!o.status){
+    if(o.cancelled) o.status='cancelled';
+    else{ const sts=o.lineItems.map(li=>li.status||'queued');
+      if(o.deliveredBy&&sts.every(s=>s==='done'))o.status='done';
+      else if(sts.every(s=>['ready','done'].includes(s)))o.status='ready';
+      else if(sts.some(s=>s!=='queued'))o.status='production';
+      else o.status='received'; }
+  }
+  o.statusHistory=o.statusHistory||[];
+  return o;
+}
+
+function summarize(o){ return { id:o.id, num:o.num, projectName:o.projectName, gcClient:o.gcClient, requesterName:o.requesterName,
+  dueDate:o.dueDate, orderDate:o.orderDate, fulfillment:o.fulfillment, status:o.status,
+  scheduledFor:o.scheduledFor||'', scheduledTime:o.scheduledTime||'', holdReason:o.holdReason||'',
+  items:o.lineItems.length, pieces:o.lineItems.reduce((a,l)=>a+(l.qtyOrdered||0),0),
+  lf:Math.round(orderLF(o)*10)/10,
+  openQ:hasOpenQuestion(o), newReply:hasNewReply(o), late:isLate(o),
+  under:o.lineItems.some(li=>li.built&&liFlag(li)==='under') } }
+
+async function persistOrder(o){
+  const okOrder=await ssave(OK(o.id),o,true);
+  const idx=await sload(KEY_INDEX,true) || INDEX;
+  const i=idx.orders.findIndex(x=>x.id===o.id);
+  const sum=summarize(o);
+  if(i>=0) idx.orders[i]=sum; else idx.orders.unshift(sum);
+  if(o.num>=idx.seq) idx.seq=o.num+1;
+  INDEX=idx;
+  const okIdx=await ssave(KEY_INDEX,idx,true);
+  if(!okOrder||!okIdx) toast('\u26A0 Couldn\u2019t save. If you\u2019re offline, get back online and hit save again.');
+  else ALLORDERS=null; // invalidate spreadsheet cache
+  return okOrder&&okIdx;
+}
+async function loadOrder(id){ const o=await sload(OK(id),true); return migrateOrder(o) }
+async function refreshIndex(){ const idx=await sload(KEY_INDEX,true); if(idx) INDEX=idx }
+
+/* ---------------- photos ---------------- */
+function pickPhoto(cb){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.style.position='fixed'; inp.style.left='-9999px'; document.body.appendChild(inp); // iOS Safari needs it in the DOM
+  inp.onchange=()=>{ const f=inp.files&&inp.files[0]; document.body.removeChild(inp); if(!f)return;
+    toast('Loading photo…');
+    const rd=new FileReader();
+    rd.onerror=()=>toast('\u26A0 Couldn\u2019t read that photo — try another one.');
+    rd.onload=()=>{ const img=new Image();
+      img.onerror=()=>toast('\u26A0 That file isn\u2019t a photo this browser can open.');
+      img.onload=()=>{
+        try{
+          const max=1000; let w=img.width,h=img.height;
+          if(Math.max(w,h)>max){const k=max/Math.max(w,h);w=Math.round(w*k);h=Math.round(h*k)}
+          const c=document.createElement('canvas');c.width=w;c.height=h;
+          c.getContext('2d').drawImage(img,0,0,w,h);
+          cb(c.toDataURL('image/jpeg',.7));
+        }catch(e){ cb(rd.result) } // canvas blocked? store original
+      };
+      img.src=rd.result;
+    };
+    rd.readAsDataURL(f);
+  };
+  inp.click();
+}
+async function savePhoto(dataUrl){ const id=uid(); const ok=await rawSet(PK(id),dataUrl,true); if(!ok){toast('\u26A0 Photo didn\u2019t save — storage is full or offline.');return null} photoCache[id]=dataUrl; return id }
+async function getPhoto(id){ if(photoCache[id])return photoCache[id]; const v=await rawGet(PK(id),true); if(v)photoCache[id]=v; return v }
+
+/* =====================================================================
+   RENDERING
+   ===================================================================== */
+const app=$('#app');
+function isDesktop(){ return (window.innerWidth||0)>=760 }
+function render(){
+  if(!ROLE){ renderGate(); return }
+  const wide = VIEW.name==='sheet' || VIEW.name==='cal' || (VIEW.name==='home'&&ROLE==='shop');
+  document.body.className = (ROLE==='shop'?'shopview':'reqview')+(wide?' wide':'');
+  if(VIEW.name==='home') ROLE==='shop'?renderShopHome():renderReqHome();
+  else if(VIEW.name==='new') renderOrderForm();
+  else if(VIEW.name==='order') renderOrderDetail();
+  else if(VIEW.name==='sheet') renderSheetView();
+  else if(VIEW.name==='cal') renderCalendar();
+  else if(VIEW.name==='ref') renderReference();
+}
+let _rsz=null;
+window.addEventListener('resize',()=>{ clearTimeout(_rsz); _rsz=setTimeout(()=>{ if(ROLE&&VIEW.name==='home')render() },250) });
+function topbar(title,backTo){
+  return `<div class="topbar ${ROLE==='shop'?'shop':'req'}">
+    ${backTo?`<button class="iconbtn" onclick="goBack()" aria-label="Back">←</button>`:nlogo()}
+    <div class="brand">${title||'Nastase'}<small>Metal Trim Shop</small></div>
+    <span class="mode ${ROLE==='shop'?'shop':'req'}">${ROLE==='shop'?'Shop':'Office'}</span>
+    <button class="iconbtn" title="All orders — spreadsheet view" onclick="openSheetView()">▦</button>
+    <button class="iconbtn" title="Switch user" onclick="switchUser()">⇄</button>
+  </div>`;
+}
+function nlogo(){return `<svg class="nlogo" viewBox="0 0 40 40"><path d="M6 4 h9 l13 20 V4 h6 v32 h-9 L12 16 v20 H6 Z" fill="#fff"/></svg>`}
+window.goBack=function(){ if(VIEW.name!=='home'){ VIEW={name:'home'}; CUR=null; ACTIVE_LI=null; render(); loadHomeData() } }
+window.switchUser=function(){
+  askConfirm('You\u2019ll need a PIN to get back in.','Switch user',async()=>{ ROLE=null; await sdel('trimshop-device-role',false); render() },{title:'Switch user?',noLabel:'Stay'});
+};
+
+/* ---------------- GATE ---------------- */
+let pinTry='', pinRole=null;
+function renderGate(){
+  document.body.className='';
+  if(!pinRole){
+    app.innerHTML=`<div class="gate">
+      <svg width="68" height="68" viewBox="0 0 40 40" style="margin-bottom:8px"><path d="M6 4 h9 l13 20 V4 h6 v32 h-9 L12 16 v20 H6 Z" fill="#fff"/></svg>
+      <h1>Nastase Contracting</h1><div class="tag">Metal Trim Shop</div>
+      <div class="rolebtns">
+        <button class="rolebtn req" onclick="startPin('requester')">
+          <div class="rname">Office</div><div class="rdesc">Submit &amp; track trim orders</div></button>
+        <button class="rolebtn shop" onclick="startPin('shop')">
+          <div class="rname">Shop</div><div class="rdesc">Build queue &amp; run logging</div></button>
+      </div>
+      <div class="foot">Internal use only · PINs are held by Alex &amp; Randy<br>This gate is a convenience, not security — keep this tool inside the company.</div>
+    </div>`;
+  } else {
+    app.innerHTML=`<div class="gate">
+      <h1 style="margin-top:10px">${pinRole==='shop'?'Shop':'Office'} PIN</h1>
+      <div class="pindots">${[0,1,2,3].map(i=>`<i class="${i<pinTry.length?'full':''}"></i>`).join('')}</div>
+      <div class="pinerr" id="pinerr"></div>
+      <div class="pinpad">
+        ${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="pinKey(${n})">${n}</button>`).join('')}
+        <button onclick="cancelPin()" style="font-size:1rem">Back</button>
+        <button onclick="pinKey(0)">0</button>
+        <button onclick="pinDel()">⌫</button>
+      </div>
+    </div>`;
+  }
+}
+window.startPin=r=>{pinRole=r;pinTry='';renderGate()};
+window.cancelPin=()=>{pinRole=null;pinTry='';renderGate()};
+window.pinDel=()=>{pinTry=pinTry.slice(0,-1);renderGate()};
+window.pinKey=async n=>{
+  pinTry+=n;
+  if(pinTry.length<4){renderGate();return}
+  if(pinTry===PINS[pinRole]){
+    ROLE=pinRole; pinRole=null; pinTry='';
+    await ssave('trimshop-device-role',ROLE,false);
+    VIEW={name:'home'}; render(); loadHomeData();
+  } else { pinTry=''; renderGate(); $('#pinerr').textContent='Wrong PIN — try again'; }
+};
+
+/* ---------------- order cards ---------------- */
+function orderCard(s){
+  return `<button class="ordercard" onclick="openOrder('${s.id}')">
+    <div class="toprow">
+      <span class="proj">${esc(s.projectName)}</span>
+      <span class="chip st-${s.status}">${ST_LABEL[s.status]||s.status}</span>
+    </div>
+    <div class="meta">
+      <span class="num">#${s.num}</span>
+      ${s.gcClient?`<span>${esc(s.gcClient)}</span>`:''}
+      <span>${s.items} item${s.items!==1?'s':''} · <span class="num">${s.pieces}</span> pcs · <span class="num">${s.lf||0}</span> LF</span>
+      <span>Due <b class="num">${fmtDate(s.dueDate)}</b></span>
+      ${s.status==='scheduled'&&s.scheduledFor?`<span>📅 Sched <b class="num">${fmtDate(s.scheduledFor)}${s.scheduledTime?' '+s.scheduledTime:''}</b></span>`:''}
+      <span>${s.fulfillment==='pickup'?'Pickup':'Deliver'}</span>
+    </div>
+    ${(s.late||s.openQ||s.newReply||s.under||(s.status==='onhold'&&s.holdReason))?`<div class="flags">
+      ${s.late?'<span class="chip fl-late">Past due</span>':''}
+      ${s.status==='onhold'&&s.holdReason?`<span class="chip st-onhold">⏸ ${esc(s.holdReason)}</span>`:''}
+      ${ROLE==='requester'&&s.openQ?'<span class="chip fl-msg">Shop asked a question</span>':''}
+      ${ROLE==='shop'&&s.newReply?'<span class="chip fl-msg">Office replied</span>':''}
+      ${s.under?'<span class="chip fl-under">Short count</span>':''}
+    </div>`:''}
+  </button>`;
+}
+window.openOrder=async id=>{
+  const o=await loadOrder(id);
+  if(!o){toast('\u26A0 Couldn\u2019t load that order. If you\u2019re on a different device, use Export/Import in the ▦ view to move data over.');return}
+  CUR=o; ACTIVE_LI=null; VIEW={name:'order',id}; render();
+};
+
+/* ---------------- REQUESTER HOME ---------------- */
+async function loadHomeData(){ await refreshIndex(); if(VIEW.name==='home') render() }
+function renderReqHome(){
+  const all=INDEX.orders;
+  const groups={
+    open: all.filter(s=>!['done','cancelled'].includes(s.status)),
+    needs: all.filter(s=>s.openQ&&!['done','cancelled'].includes(s.status)),
+    done: all.filter(s=>['done','cancelled'].includes(s.status)),
+    all
+  };
+  const list=groups[RFILTER]||all;
+  app.innerHTML= topbar('Nastase') + `<div class="wrap">
+    <button class="btn primary block" style="min-height:64px;font-size:1.2rem" onclick="startNewOrder()">＋ &nbsp;New Trim Order</button>
+    <div style="height:14px"></div>
+    <div class="filters">
+      ${fch('open','Open',groups.open.length,'req',RFILTER)}
+      ${fch('needs','Needs my reply',groups.needs.length,'req',RFILTER)}
+      ${fch('done','Done',groups.done.length,'req',RFILTER)}
+      ${fch('all','All',all.length,'req',RFILTER)}
+    </div>
+    ${list.length? list.map(orderCard).join('') : reqEmpty()}
+    ${INDEX.orders.length?`<button class="btn ghost block sm" style="margin-top:8px" onclick="openSheetView()">▦ All Orders — Spreadsheet View</button>`:''}
+    <div class="btnrow" style="margin-top:8px">
+      <button class="btn ghost sm" onclick="openCalendar()">📅 Calendar</button>
+      <button class="btn ghost sm" onclick="openReference()">📖 Reference</button>
+    </div>
+  </div>
+  <div id="sheetmount"></div>`;
+}
+function fch(key,label,count,cls,cur){return `<button class="fchip ${cur===key?'on '+cls:''}" onclick="setFilter('${key}')">${label}<span class="cnt">${count}</span></button>`}
+window.setFilter=k=>{ if(ROLE==='shop')FILTER=k; else RFILTER=k; render() };
+function reqEmpty(){
+  if(INDEX.orders.length) return `<div class="empty"><h3>Nothing here</h3><p>No orders match this tab. Tap another one above.</p></div>`;
+  return `<div class="empty"><div class="big">📋</div><h3>No orders yet</h3>
+    <p>Tap <b>New Trim Order</b> above to send your first order to the shop. It takes about a minute.</p>
+    <button class="btn ghost blue" onclick="seedSample()">Load an example order to look around</button></div>`;
+}
+window.seedSample=async function(){ const o=sampleOrder(); await persistOrder(o); toast('Example order added'); render() };
+function sampleOrder(){
+  const num=INDEX.seq++;
+  const li=(itemId,qty)=>{ const it=findItem(itemId);
+    return { id:uid(), itemId, name:it.name, material:'Pre-finished Steel (PAC-Clad)', gauge:'24 ga', color:'Iron Ore', len:{ft:10,in:0,s:0},
+      dims:it.dims.map(x=>({label:x.label,w:x.w,s:x.s})), notes:'', qtyOrdered:qty, runs:[], built:false, messages:[], photos:[] } };
+  const o={ id:uid(), num, projectName:'1500 Meadowlake Pkwy', jobAddress:'1500 Meadowlake Pkwy, Kansas City', gcClient:'Hausmann',
+    requesterName:'Alex',
+    orderDate:today(), dueDate:today(), fulfillment:'pickup', deliveryAddress:'', specialNotes:'Z Flashing can be any scrap color.',
+    status:'received', statusHistory:[{to:'received',at:Date.now()}],
+    lineItems:[ (()=>{const l=li('z-flash',56);l.color='Any / Scrap (shop\u2019s choice)';return l})(),
+      li('j-channel',62), li('l-metal',28), li('drip',28), li('fake-j',28), li('inside-corner',14) ] };
+  return o;
+}
+
+/* ---------------- NEW ORDER FORM ---------------- */
+window.startNewOrder=async function(){
+  const saved=await sload('trimshop-draft',false);
+  if(saved && saved.lineItems && (saved.projectName||saved.lineItems.length)){
+    askConfirm('You have an unfinished order ("'+esc(saved.projectName||'no name yet')+'"). Pick it back up?','Continue it',
+      ()=>{ DRAFT=saved; VIEW={name:'new'}; render() },
+      {title:'Unfinished order', noLabel:'Start fresh'});
+    // "Start fresh" path: the no-button starts a blank order instead of just dismissing
+    const ov=document.getElementById('confirmov');
+    ov.querySelector('.btn.ghost').onclick=async()=>{ window.answerConfirm(0); DRAFT=blankDraft(); await sdel('trimshop-draft',false); VIEW={name:'new'}; render() };
+    return;
+  }
+  DRAFT=blankDraft();
+  VIEW={name:'new'}; render();
+};
+function blankDraft(){ return { projectName:'',jobAddress:'',gcClient:'',requesterName:'',
+  dueDate:'',fulfillment:'delivery',deliveryAddress:'',specialNotes:'',lineItems:[] } }
+function lastLineDefaults(){
+  const prev=DRAFT&&DRAFT.lineItems.length?DRAFT.lineItems[DRAFT.lineItems.length-1]:null;
+  return prev? {material:prev.material,gauge:prev.gauge,color:prev.color}
+             : {material:MATERIALS[0],gauge:'24 ga',color:''};
+}
+async function saveDraft(){ await ssave('trimshop-draft',DRAFT,false) }
+
+function colorOptions(material,selected){
+  return colorsForMaterial(material).map(g=>`<optgroup label="${g.g}">${g.list.map(c=>`<option ${c===selected?'selected':''}>${esc(c)}</option>`).join('')}</optgroup>`).join('');
+}
+function renderOrderForm(){
+  const dv=DRAFT;
+  app.innerHTML = topbar(dv._editing?'Edit Order':'New Order','back') + `<div class="wrap">
+    <div class="card">
+      <div class="secHead" style="margin-top:0"><h2>Job Info</h2><div class="rule"></div></div>
+      <div class="field"><label>Project / Job Name <span class="req-mark">*</span></label>
+        <input type="text" value="${esc(dv.projectName)}" placeholder="e.g. 1500 Meadowlake Pkwy" oninput="df('projectName',this.value)"></div>
+      <div class="field"><label>Job Address</label>
+        <input type="text" value="${esc(dv.jobAddress)}" placeholder="Street, city" oninput="df('jobAddress',this.value)"></div>
+      <div class="grid2">
+        <div class="field"><label>GC / Client</label>
+          <input type="text" value="${esc(dv.gcClient)}" oninput="df('gcClient',this.value)"></div>
+        <div class="field"><label>Your Name <span class="req-mark">*</span></label>
+          <input type="text" value="${esc(dv.requesterName)}" placeholder="Who's ordering" oninput="df('requesterName',this.value)"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Need it by <span class="req-mark">*</span></label>
+          <input type="date" value="${esc(dv.dueDate)}" onchange="df('dueDate',this.value)"></div>
+        <div class="field"><label>Get it how?</label>
+          <div class="seg">
+            <button type="button" class="${dv.fulfillment==='delivery'?'on':''}" onclick="df('fulfillment','delivery');render()">Deliver</button>
+            <button type="button" class="${dv.fulfillment==='pickup'?'on':''}" onclick="df('fulfillment','pickup');render()">Pickup</button>
+          </div></div>
+      </div>
+      ${dv.fulfillment==='delivery'?`<div class="field"><label>Deliver to</label>
+        <input type="text" value="${esc(dv.deliveryAddress||dv.jobAddress)}" oninput="df('deliveryAddress',this.value)">
+        <div class="hint">Defaults to the job address — change it if the drop spot is different.</div></div>`:''}
+      <div class="field"><label>Special Notes</label>
+        <textarea rows="2" oninput="df('specialNotes',this.value)" placeholder="Anything Randy should know">${esc(dv.specialNotes)}</textarea></div>
+    </div>
+
+    <div class="secHead"><h2>Trim Pieces (${dv.lineItems.length})</h2><div class="rule"></div></div>
+    ${dv.lineItems.map((li,i)=>draftLine(li,i)).join('')}
+    <button class="btn ghost blue block" style="min-height:60px" onclick="openItemPicker()">＋ Add a trim piece</button>
+    <div style="height:80px"></div>
+  </div>
+  <div class="stickybar"><div class="inner">
+    <button class="btn ghost" onclick="discardDraft()">Discard</button>
+    <button class="btn primary" style="flex:2" onclick="submitOrder()">${dv._editing?'Save changes →':'Send to Shop →'}</button>
+  </div></div>
+  <div id="sheetmount"></div>`;
+}
+window.df=(k,v)=>{DRAFT[k]=v;saveDraft()};
+function draftLine(li,i){
+  const it=findItem(li.itemId);
+  return `<div class="card" style="display:flex;gap:12px;align-items:center">
+    ${profileSVG(it?it.profile:'custom')}
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:800">${esc(li.name)}</div>
+      <div class="num" style="font-size:.9rem;color:var(--grey2)">
+        ${li.dims.filter(x=>x.w||x.s).map(x=>`${esc(x.label)} ${dimStr(x)}`).join(' · ')||(li.itemId==='custom'?'custom — see notes/photo':'no dims set')}
+      </div>
+      <div style="font-size:.88rem;color:var(--grey2)">${esc(li.material||'')} · ${esc(li.gauge)} · ${esc(li.color)} · ${lenStr(li.len)} sticks</div>
+    </div>
+    <div style="text-align:right">
+      <div class="num" style="font-size:1.3rem;font-weight:800">×${li.qtyOrdered}</div>
+      <button class="btn sm ghost" style="margin-top:6px" onclick="editLine(${i})">Edit</button>
+    </div>
+  </div>`;
+}
+window.discardDraft=function(){ askConfirm('Throw away everything you\u2019ve entered on this order?','Throw it away',async()=>{ DRAFT=null; await sdel('trimshop-draft',false); goBack() },{danger:1,noLabel:'Keep working'}) };
+
+/* ---- item picker + line editor ---- */
+let _confirmCb=null,_confirmCb0=null;
+function askConfirm(msg, okLabel, cb, opts){
+  opts=opts||{};
+  _confirmCb=cb;
+  const div=document.createElement('div'); div.className='sheetback'; div.id='confirmov'; div.style.zIndex=200;
+  div.innerHTML=`<div class="sheet" style="max-width:520px;border-radius:16px;margin-bottom:8vh" onclick="event.stopPropagation()">
+    <h3>${opts.title||'Are you sure?'}</h3>
+    <div class="hint" style="margin-bottom:16px;font-size:.98rem;color:var(--grey)">${msg}</div>
+    <div class="btnrow">
+      <button class="btn ghost" onclick="answerConfirm(0)">${opts.noLabel||'Go back'}</button>
+      <button class="btn ${opts.danger?'danger':(ROLE==='shop'?'shopmain':'primary')}" style="flex:2" onclick="answerConfirm(1)">${okLabel}</button>
+    </div></div>`;
+  div.onclick=()=>answerConfirm(0);
+  document.body.appendChild(div);
+}
+window.answerConfirm=function(yes){
+  const ov=document.getElementById('confirmov'); if(ov)ov.remove();
+  const cb=_confirmCb; _confirmCb=null;
+  if(yes&&cb)cb();
+};
+function mountSheet(html){ const m=$('#sheetmount'); if(!m){toast('\u26A0 Couldn\u2019t open that — try again.');return} m.innerHTML=`<div class="sheetback" onclick="if(event.target===this)closeSheet()"><div class="sheet">${html}</div></div>` }
+window.closeSheet=()=>{ const m=$('#sheetmount'); if(m)m.innerHTML='' };
+window.openItemPicker=function(cat){
+  if(!cat){
+    mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>What kind of piece?</h3>
+      <div class="catgrid">${CATALOG.map(c=>`<button class="catbtn" onclick="openItemPicker('${esc(c.cat)}')">
+        ${c.cat}<span class="sub">${c.items.slice(0,3).map(i=>i.name).join(', ')}${c.items.length>3?'…':''}</span></button>`).join('')}</div>`);
+  } else {
+    const c=CATALOG.find(x=>x.cat===cat);
+    mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>${esc(cat)}</h3>
+      ${c.items.map(i=>`<button class="itembtn" onclick="chooseItem('${i.id}')">${profileSVG(i.profile)}
+        <span>${esc(i.name)}${i.alias?`<span class="alias">${esc(i.alias)}</span>`:''}</span></button>`).join('')}
+      <button class="btn ghost block" onclick="openItemPicker()">← All categories</button>`);
+  }
+};
+window.chooseItem=function(id){
+  const it=findItem(id);
+  const dft=lastLineDefaults();
+  const li={ id:uid(), itemId:id, name:it.name, material:dft.material, gauge:dft.gauge, color:dft.color, len:{ft:10,in:0,s:0},
+    dims: it.dims.map(x=>({label:x.label,w:x.w,s:x.s})), notes:'', qtyOrdered:0, runs:[], built:false, messages:[], photos:[], refPhoto:null };
+  DRAFT.lineItems.push(li); saveDraft();
+  closeSheet(); editLine(DRAFT.lineItems.length-1,true);
+};
+window.editLine=function(i,isNew){
+  EDIT_I=i; const li=DRAFT.lineItems[i]; const it=findItem(li.itemId);
+  mountSheet(`<button class="closex" onclick="cancelLine(${isNew?1:0})">✕</button>
+    <h3>${esc(li.name)}</h3>
+    ${bigDiagram(it,li.dims)||''}
+    ${it.specNote?`<div class="hint" style="margin:-4px 0 12px;background:var(--blue-tint);padding:10px;border-radius:8px;color:var(--blue-dark)"><b>Spec:</b> ${esc(it.specNote)}</div>`:''}
+    ${CUSTOM_IDS.includes(li.itemId)?`<div class="hint" style="margin-bottom:10px">Describe it in the notes and attach a sketch or photo — the shop builds exactly what you show them.</div>`:''}
+    ${li.dims.map((x,di)=>`<div class="dimrow"><span class="dimlabel">${esc(x.label)}</span>${fracInputHTML(di,x)}</div>`).join('')}
+    <div class="field"><label>Material</label>
+      <select onchange="lf(${i},'material',this.value);lf(${i},'color','');editLine(${i})">${MATERIALS.map(m=>`<option ${m===li.material?'selected':''}>${m}</option>`).join('')}</select></div>
+    <div class="grid2">
+      <div class="field"><label>Gauge</label><select onchange="lf(${i},'gauge',this.value);editLine(${i})">${GAUGES.map(g=>`<option ${g===li.gauge?'selected':''}>${g}</option>`).join('')}</select>
+        <div class="hint">${GAUGE_HINTS[li.gauge]||''}</div></div>
+      <div class="field"><label>Color</label><select onchange="lf(${i},'color',this.value)"><option value="">— pick a color —</option>${colorOptions(li.material,li.color)}</select></div>
+    </div>
+    <div class="field"><label>Stick length — max 10 ft <span title="The brake bed maxes out at 10 feet.">ⓘ</span></label>
+      <div class="lenrow">
+        <input id="len-ft" type="number" inputmode="numeric" min="0" max="10" value="${li.len.ft||''}" placeholder="0" oninput="setLen('ft',this.value)"><span class="unit">ft</span>
+        <input id="len-in" type="number" inputmode="numeric" min="0" max="11" value="${li.len.in||''}" placeholder="0" oninput="setLen('in',this.value)"><span class="unit">in</span>
+        <button class="fracbtn" id="len-fb" style="flex:none;min-width:96px" onclick="openLenFrac()">${fracLabel(li.len.s)||'–'} <span style="color:var(--grey2);font-size:.8rem">▾</span></button>
+      </div>
+      <div class="hint" id="len-hint">= <b class="num">${lenStr(li.len)}</b> per stick. Down to 1/16\u2033. Hard max 10\u2032 (120\u2033).</div></div>
+    <div class="field"><label>Bend / notes</label><input type="text" value="${esc(li.notes)}" oninput="lf(${i},'notes',this.value)" placeholder="e.g. hem the ½ inch, open hem"></div>
+    <div class="field"><label>Reference photo ${CUSTOM_IDS.includes(li.itemId)?'<span class="req-mark">(required for custom)</span>':'(optional)'}</label>
+      <div class="photorow">${li.refPhoto?`<img id="refimg" alt="reference">`:''}</div>
+      <button class="btn ghost sm" onclick="addRefPhoto(${i})">📷 ${li.refPhoto?'Replace photo':'Add photo'}</button></div>
+    <div class="field"><label>How many pieces? <span class="req-mark">*</span></label>
+      <div class="logrow">
+        <button class="bump" onclick="bumpQty(${i},-1)">−1</button>
+        <input id="qtyinp" type="number" inputmode="numeric" min="0" value="${li.qtyOrdered||''}" placeholder="0" oninput="lf(${i},'qtyOrdered',Math.max(0,parseInt(this.value)||0))">
+        <button class="bump" onclick="bumpQty(${i},1)">+1</button>
+        <button class="bump" onclick="bumpQty(${i},5)">+5</button>
+        <button class="bump" onclick="bumpQty(${i},10)">+10</button>
+      </div></div>
+    <div class="btnrow">
+      <button class="btn danger" onclick="removeLine(${i})">Remove</button>
+      <button class="btn primary" style="flex:2" onclick="doneLine()">Done</button>
+    </div>`);
+  if(li.refPhoto) getPhoto(li.refPhoto).then(v=>{const im=$('#refimg');if(im&&v)im.src=v});
+};
+window.lf=(i,k,v)=>{DRAFT.lineItems[i][k]=v;saveDraft()};
+window.bumpQty=(i,n)=>{const li=DRAFT.lineItems[i];li.qtyOrdered=Math.max(0,(li.qtyOrdered||0)+n);$('#qtyinp').value=li.qtyOrdered;saveDraft()};
+window.setLen=function(part,val){
+  const li=DRAFT.lineItems[EDIT_I];
+  let v=Math.max(0,parseInt(val)||0);
+  if(part==='ft')v=Math.min(10,v); if(part==='in')v=Math.min(11,v);
+  li.len[part]=v; saveDraft();
+  const h=$('#len-hint'); if(h){
+    const tot=lenInches(li.len);
+    if(tot>MAX_STICK_IN) h.innerHTML='<b style="color:var(--red)">Too long — max stick is 10\u2032 (120\u2033). That\u2019s all the brake bed takes.</b>';
+    else h.innerHTML='= <b class="num">'+lenStr(li.len)+'</b> per stick. Down to 1/16\u2033. Hard max 10\u2032 (120\u2033).';
+  }
+};
+window.openLenFrac=function(){
+  const cur=DRAFT.lineItems[EDIT_I].len.s||0;
+  const grid=FRACS.map(([s,l])=>`<button class="${s===cur?'on':''}" onclick="setLenFrac(${s})">${l||'0'}</button>`).join('');
+  const div=document.createElement('div'); div.className='sheetback'; div.id='fracpad'; div.style.zIndex=150;
+  div.onclick=e=>{if(e.target===div)div.remove()};
+  div.innerHTML=`<div class="sheet"><h3>Fraction of an inch</h3><div class="fracgrid">${grid}</div></div>`;
+  document.body.appendChild(div);
+};
+window.setLenFrac=function(s){
+  const li=DRAFT.lineItems[EDIT_I]; li.len.s=s; saveDraft();
+  const p=$('#fracpad'); if(p)p.remove();
+  const b=$('#len-fb'); if(b)b.innerHTML=(fracLabel(s)||'–')+' <span style="color:var(--grey2);font-size:.8rem">▾</span>';
+  window.setLen('ft',String(li.len.ft||0)); // refresh hint + revalidate
+};
+window.setDim=(di,part,val)=>{const li=DRAFT.lineItems[EDIT_I];li.dims[di][part]=val;saveDraft();
+  if(part==='s'){const b=$('#fb-'+di);if(b)b.innerHTML=(fracLabel(val)||'–')+' <span style="color:var(--grey2);font-size:.8rem">▾</span>'} };
+function fracInputHTML(di,v){
+  return `<div class="fracinput">
+    <input class="whole" type="number" inputmode="numeric" min="0" max="99" value="${v.w||''}" placeholder="0" oninput="setDim(${di},'w',Math.max(0,parseInt(this.value)||0))">
+    <button class="fracbtn" id="fb-${di}" title="Pick a fraction" onclick="openFracPad(${di})">${fracLabel(v.s)||'–'} <span style="color:var(--grey2);font-size:.8rem">▾</span></button>
+    <span style="align-self:center;font-family:var(--font-num);font-size:1.2rem">\u2033</span>
+  </div>`;
+}
+window.openFracPad=function(di){
+  const cur=DRAFT.lineItems[EDIT_I].dims[di].s||0;
+  const grid=FRACS.map(([s,l])=>`<button class="${s===cur?'on':''}" onclick="setDim(${di},'s',${s});closeFracPad()">${l||'0'}</button>`).join('');
+  const div=document.createElement('div'); div.className='sheetback'; div.id='fracpad'; div.style.zIndex=150;
+  div.onclick=e=>{if(e.target===div)closeFracPad()};
+  div.innerHTML=`<div class="sheet"><h3>Fraction of an inch</h3><div class="fracgrid">${grid}</div></div>`;
+  document.body.appendChild(div);
+};
+window.closeFracPad=()=>{const p=$('#fracpad');if(p)p.remove()};
+window.addRefPhoto=i=>pickPhoto(async data=>{ const id=await savePhoto(data); if(id){DRAFT.lineItems[i].refPhoto=id;saveDraft();editLine(i);toast('Photo added ✓')} });
+window.removeLine=i=>{ askConfirm('Remove <b>'+esc(DRAFT.lineItems[i].name)+'</b> from this order?','Remove it',()=>{DRAFT.lineItems.splice(i,1);saveDraft();closeSheet();render()},{danger:1,noLabel:'Keep it'}) };
+window.cancelLine=isNew=>{ if(isNew){DRAFT.lineItems.splice(EDIT_I,1);saveDraft()} closeSheet(); render() };
+window.doneLine=()=>{ const li=DRAFT.lineItems[EDIT_I];
+  if(!li.qtyOrdered){toast('How many pieces? Enter a quantity.');return}
+  if(!li.color){toast('Pick a color for this piece.');return}
+  const tot=lenInches(li.len);
+  if(tot<=0){toast('Set a stick length.');return}
+  if(tot>MAX_STICK_IN){toast('Stick too long — max is 10\u2032 (120\u2033).');return}
+  if(CUSTOM_IDS.includes(li.itemId)&&!li.refPhoto&&!li.notes){toast('Custom pieces need notes or a photo so the shop knows what to build.');return}
+  closeSheet(); render() };
+
+window.submitOrder=async function(){
+  const dv=DRAFT, missing=[];
+  if(!dv.projectName.trim())missing.push('project name');
+  if(!dv.requesterName.trim())missing.push('your name');
+  if(!dv.dueDate)missing.push('need-by date');
+  if(!dv.lineItems.length)missing.push('at least one trim piece');
+  const noColor=dv.lineItems.filter(l=>!l.color);
+  if(noColor.length)missing.push('color on: '+noColor.map(l=>l.name).join(', '));
+  const noQty=dv.lineItems.filter(l=>!l.qtyOrdered);
+  if(noQty.length)missing.push('quantity on: '+noQty.map(l=>l.name).join(', '));
+  const badLen=dv.lineItems.filter(l=>lenInches(l.len)<=0||lenInches(l.len)>MAX_STICK_IN);
+  if(badLen.length)missing.push('stick length (0 < length ≤ 10\u2032) on: '+badLen.map(l=>l.name).join(', '));
+  if(missing.length){toast('Still needed → '+missing.join(' · '));return}
+  await refreshIndex();
+  if(dv._editing){
+    const id=dv._editing; delete dv._editing;
+    const o=Object.assign({},dv); o.id=id;
+    if(o.fulfillment==='delivery'&&!o.deliveryAddress)o.deliveryAddress=o.jobAddress;
+    const ok=await persistOrder(o);
+    if(ok){DRAFT=null;await sdel('trimshop-draft',false);toast('Order #'+o.num+' updated ✓');CUR=o;VIEW={name:'order',id};render()}
+    return;
+  }
+  const o=Object.assign({},dv,{id:uid(),num:INDEX.seq++,orderDate:today(),status:'received',
+    statusHistory:[{to:'received',at:Date.now()}]});
+  if(o.fulfillment==='delivery'&&!o.deliveryAddress)o.deliveryAddress=o.jobAddress;
+  const ok=await persistOrder(o);
+  if(ok){ DRAFT=null; await sdel('trimshop-draft',false); toast('✓ Sent! Order #'+o.num+' is in the shop\u2019s queue.'); VIEW={name:'home'};render() }
+};
+
+/* ---------------- SHOP HOME — build queue by workflow status ---------------- */
+function kbCard(sum){
+  return `<div class="kbcard" id="kb-${sum.id}"
+      onpointerdown="kbPointerDown(event,'${sum.id}')" onclick="kbCardClick(event,'${sum.id}')">
+    <div class="kbtitle"><span class="num">#${sum.num}</span> ${esc(sum.projectName)}</div>
+    <div class="kbmeta">
+      <span>Due <b class="num">${fmtDate(sum.dueDate)}</b></span>
+      <span class="num">${sum.pieces} pcs</span>
+      ${sum.status==='scheduled'&&sum.scheduledFor?`<span>📅 <span class="num">${fmtDate(sum.scheduledFor)}</span></span>`:''}
+    </div>
+    ${(sum.late||sum.openQ||sum.newReply||sum.under||(sum.status==='onhold'&&sum.holdReason))?`<div class="flags">
+      ${sum.late?'<span class="chip fl-late">Past due</span>':''}
+      ${sum.status==='onhold'&&sum.holdReason?`<span class="chip st-onhold">⏸ ${esc(sum.holdReason)}</span>`:''}
+      ${sum.newReply?'<span class="chip fl-msg">Office replied</span>':''}
+      ${sum.under?'<span class="chip fl-under">Short</span>':''}
+    </div>`:''}
+  </div>`;
+}
+/* ---- Kanban drag & drop via Pointer Events — works with mouse AND touch.
+   Native HTML5 drag/drop (dragstart/dragover/drop) doesn't work on most
+   touchscreens, which is why the board used to fall back to a tab list on
+   phones/tablets. This unifies both into one path: press and hold a card
+   (or click-and-drag with a mouse) to pick it up; a quick tap/click opens it. */
+let KB_DRAG=null;
+const KB_HOLD_MS=260, KB_MOVE_CANCEL=10;
+window.kbPointerDown=function(ev,id){
+  if(ev.pointerType==='mouse' && ev.button!==0) return;
+  const el=document.getElementById('kb-'+id);
+  if(!el) return;
+  const st={id, el, startX:ev.clientX, startY:ev.clientY, active:false, ghost:null};
+  st._move=e=>kbPointerMove(e); st._up=e=>kbPointerUp(e); st._cancel=()=>kbCancel();
+  KB_DRAG=st;
+  st.timer=setTimeout(()=>kbActivate(),ev.pointerType==='mouse'?0:KB_HOLD_MS);
+  window.addEventListener('pointermove',st._move,{passive:false});
+  window.addEventListener('pointerup',st._up);
+  window.addEventListener('pointercancel',st._cancel);
+};
+function kbActivate(){
+  const st=KB_DRAG; if(!st) return;
+  st.active=true; st.el.classList.add('dragging'); st.el.dataset.dragging='1';
+  if(navigator.vibrate) try{ navigator.vibrate(12) }catch(e){}
+  const r=st.el.getBoundingClientRect();
+  const ghost=st.el.cloneNode(true); ghost.classList.add('kbghost');
+  ghost.style.width=r.width+'px'; ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px';
+  document.body.appendChild(ghost); st.ghost=ghost;
+  st.offX=st.startX-r.left; st.offY=st.startY-r.top;
+}
+function kbPointerMove(ev){
+  const st=KB_DRAG; if(!st) return;
+  const dx=ev.clientX-st.startX, dy=ev.clientY-st.startY;
+  if(!st.active){
+    if(Math.abs(dx)>KB_MOVE_CANCEL||Math.abs(dy)>KB_MOVE_CANCEL) kbCancel();
+    return;
+  }
+  ev.preventDefault();
+  st.ghost.style.left=(ev.clientX-st.offX)+'px';
+  st.ghost.style.top=(ev.clientY-st.offY)+'px';
+  document.querySelectorAll('.kbcol.dragover').forEach(c=>c.classList.remove('dragover'));
+  const under=document.elementFromPoint(ev.clientX,ev.clientY);
+  const col=under&&under.closest('.kbcol');
+  if(col) col.classList.add('dragover');
+  st.overCol=col;
+}
+async function kbPointerUp(){
+  const st=KB_DRAG; if(!st) return;
+  clearTimeout(st.timer);
+  window.removeEventListener('pointermove',st._move);
+  window.removeEventListener('pointerup',st._up);
+  window.removeEventListener('pointercancel',st._cancel);
+  document.querySelectorAll('.kbcol.dragover').forEach(c=>c.classList.remove('dragover'));
+  if(!st.active){ KB_DRAG=null; return; } // short tap — the onclick handler opens the order
+  if(st.ghost) st.ghost.remove();
+  st.el.classList.remove('dragging');
+  const el=st.el, col=st.overCol; KB_DRAG=null;
+  setTimeout(()=>{ delete el.dataset.dragging }, 80); // outlast the synthetic click that follows pointerup
+  if(col){
+    const newStatus=col.getAttribute('data-status');
+    if(newStatus){
+      const o=await loadOrder(st.id);
+      if(!o){toast('\u26A0 Couldn\u2019t load that order.');return}
+      if(o.status!==newStatus){ CUR=o; pickStatus(newStatus); } // same prompts as the dropdown
+    }
+  }
+}
+function kbCancel(){
+  const st=KB_DRAG; if(!st) return;
+  clearTimeout(st.timer);
+  window.removeEventListener('pointermove',st._move);
+  window.removeEventListener('pointerup',st._up);
+  window.removeEventListener('pointercancel',st._cancel);
+  if(st.active&&st.ghost) st.ghost.remove();
+  if(st.active) st.el.classList.remove('dragging');
+  KB_DRAG=null;
+}
+window.kbCardClick=function(ev,id){
+  if(ev.currentTarget.dataset.dragging==='1'){ ev.preventDefault(); return }
+  openOrder(id);
+};
+function renderKanban(all){
+  const g=id=>all.filter(x=>x.status===id).slice().sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999'));
+  const cols=STATUSES.map(st=>{
+    const list=g(st.id);
+    return `<div class="kbcol" data-status="${st.id}">
+      <h4><span class="chip st-${st.id}">${st.label}</span><span class="cnt">${list.length}</span></h4>
+      ${list.length?list.map(kbCard).join(''):`<div class="kbempty">Drop orders here</div>`}
+    </div>`;
+  }).join('');
+  return `<div class="kbtools">
+      <button class="btn ghost green sm" onclick="loadHomeData();toast('Refreshed')">↻ Refresh</button>
+      <button class="btn ghost sm" onclick="openSheetView()">▦ Spreadsheet</button>
+      <button class="btn ghost sm" onclick="openCalendar()">📅 Calendar</button>
+      <button class="btn ghost sm" onclick="openReference()">📖 Reference</button>
+      <span class="hint" style="margin-left:auto">Press &amp; hold a card to drag it · tap to open</span>
+    </div>
+    <div class="kb">${cols}</div>`;
+}
+function renderShopHome(){
+  const all=INDEX.orders;
+  app.innerHTML= topbar('Build Queue') + `<div class="wrap">${renderKanban(all)}</div><div id="sheetmount"></div>`;
+}
+function shopEmpty(){
+  if(INDEX.orders.length) return `<div class="empty"><h3>Nothing in this pile</h3><p>Tap a different tab above — "All" shows everything.</p></div>`;
+  return `<div class="empty"><div class="big">🔧</div><h3>Queue is empty</h3>
+    <p>When the office sends a trim order it lands here under <b>Order Received</b>. Review it, schedule it, build it.</p>
+    <button class="btn ghost green" onclick="seedSample()">Load an example order to practice on</button></div>`;
+}
+
+/* ---------------- ORDER DETAIL ---------------- */
+function renderOrderDetail(){
+  const o=CUR; if(!o){goBack();return}
+  const canEdit = ROLE==='requester' && o.status==='received' && o.lineItems.every(li=>totalBuilt(li)===0);
+  app.innerHTML = topbar('Order #'+o.num,'back') + `<div class="wrap">
+    <div class="card">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="flex:1;min-width:0">
+          <h2 style="font-size:1.3rem;text-transform:none;letter-spacing:0;overflow-wrap:anywhere">${esc(o.projectName)}</h2>
+          <div style="color:var(--grey2);margin:2px 0 8px">${esc(o.gcClient||'')}</div>
+        </div>
+      </div>
+      <div class="statusbig">
+        <span class="chip st-${o.status}">${ST_LABEL[o.status]}</span>
+        ${o.status==='scheduled'&&o.scheduledFor?`<span class="num" style="font-weight:700">📅 ${fmtDate(o.scheduledFor)}${o.scheduledTime?' '+o.scheduledTime:''}</span>`:''}
+        ${o.status==='onhold'&&o.holdReason?`<span style="color:var(--amber);font-weight:700">⏸ ${esc(o.holdReason)}${o.holdNote?': '+esc(o.holdNote):''}</span>`:''}
+        ${ROLE==='shop'?`<button class="btn shopmain sm" onclick="openStatusSheet()">Change status ▾</button>`:''}
+      </div>
+      <div style="height:8px"></div>
+      <div class="kv"><b>Ordered by</b><span>${esc(o.requesterName)} · ${fmtDate(o.orderDate)}</span></div>
+      <div class="kv"><b>Due</b><span class="num" style="font-weight:700;${isLate(o)?'color:var(--red)':''}">${fmtDate(o.dueDate)}${isLate(o)?' — past due':''}</span></div>
+      <div class="kv"><b>${o.fulfillment==='pickup'?'Pickup':'Deliver to'}</b><span>${o.fulfillment==='pickup'?'Shop':esc(o.deliveryAddress||o.jobAddress||'—')}</span></div>
+      ${o.metalBrand?`<div class="kv"><b>Metal</b><span>${esc(o.metalBrand)}${o.defaultGauge?' · '+esc(o.defaultGauge):''}${o.defaultColor?' · '+esc(o.defaultColor):''} (legacy order)</span></div>`:''}
+      <div class="kv"><b>Total</b><span class="num">${o.lineItems.reduce((a,l)=>a+l.qtyOrdered,0)} pcs · ${Math.round(orderLF(o)*10)/10} LF ordered</span></div>
+      ${o.specialNotes?`<div class="kv"><b>Notes</b><span>${esc(o.specialNotes)}</span></div>`:''}
+      <div class="btnrow" style="margin-top:12px">
+        ${canEdit?`<button class="btn ghost blue sm" onclick="editOrder()">✎ Edit order</button>
+                   <button class="btn danger sm" onclick="cancelOrder()">Cancel order</button>`:''}
+        ${ROLE==='requester'&&o.status==='ready'?`<button class="btn primary sm" onclick="officePickup()">✔ Mark ${o.fulfillment==='pickup'?'picked up':'delivered'}</button>`:''}
+        ${ROLE==='requester'?`<button class="btn ghost blue sm" onclick="reorder()">↻ Reorder this</button>`:''}
+        <button class="btn ghost sm" onclick="printOrder()">🖨 Print</button>
+      </div>
+    </div>
+
+    <div class="secHead"><h2>Trim Pieces</h2><div class="rule"></div></div>
+    ${ROLE==='shop' && !['cancelled','done'].includes(o.status) ? `<div class="hint" style="margin:-4px 0 10px;color:var(--grey2)">Tap a piece to open it. Only the piece with the <b style="color:var(--hivis-dark)">green frame</b> takes run counts — that keeps counts off the wrong item.</div>`:''}
+    ${o.lineItems.map((li,i)=>lineItemCard(li,i,o)).join('')}
+
+    ${signoffBlock(o)}
+    ${o.statusHistory&&o.statusHistory.length>1?`<div class="card"><div class="secHead" style="margin-top:0"><h2>History</h2><div class="rule"></div></div>
+      ${o.statusHistory.map(h=>`<div class="kv"><b>${new Date(h.at).toLocaleDateString()}</b><span>${ST_LABEL[h.to]||h.to}${h.note?' — '+esc(h.note):''}</span></div>`).join('')}</div>`:''}
+    <div style="height:20px"></div>
+  </div>
+  ${printSheet(o)}
+  <div id="sheetmount"></div>`;
+  o.lineItems.forEach(li=>{
+    (li.photos||[]).concat(li.refPhoto?[li.refPhoto]:[]).forEach(pid=>{
+      getPhoto(pid).then(v=>{document.querySelectorAll('img[data-pid="'+pid+'"]').forEach(im=>{if(v)im.src=v})});
+    });
+  });
+}
+
+/* ---- status change sheet ---- */
+window.openStatusSheet=function(){
+  const o=CUR;
+  mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>Move Order #${o.num} to…</h3>
+    <div class="statuslist">
+    ${STATUSES.map(s=>`<button class="${s.id===o.status?'cur':''}" onclick="pickStatus('${s.id}')">
+      <span class="chip st-${s.id}">${s.label}</span>
+      <span style="flex:1"><span class="sdesc">${s.desc}</span></span>
+      ${s.id===o.status?'<span style="color:var(--grey2);font-size:.8rem">current</span>':''}
+    </button>`).join('')}
+    </div>`);
+};
+window.pickStatus=function(st){
+  const o=CUR;
+  if(st===o.status){closeSheet();return}
+  if(st==='scheduled'){
+    mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>Schedule Order #${o.num}</h3>
+      <div class="hint" style="margin-bottom:12px">When do you expect this order to be built and done?</div>
+      <div class="grid2">
+        <div class="field"><label>Expected completion date <span class="req-mark">*</span></label>
+          <input type="date" id="schedDate" value="${esc(o.scheduledFor||o.dueDate||'')}"></div>
+        <div class="field"><label>Time (optional)</label>
+          <input type="time" id="schedTime" value="${esc(o.scheduledTime||'')}"></div>
+      </div>
+      <button class="btn shopmain block" onclick="confirmSchedule()">✓ Schedule it</button>`);
+    return;
+  }
+  if(st==='onhold'){
+    const reasons=['Materials on order','Additional info needed','Large PO — run tracking','Machine down','Other'];
+    mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>Put Order #${o.num} on hold</h3>
+      <div class="hint" style="margin-bottom:10px">Why is it stopped? Everyone in the office will see this reason. <b>A reason is required.</b></div>
+      <div class="holdreasons" id="holdreasons">
+        ${reasons.map(r=>`<button onclick="pickHoldReason(this,'${esc(r)}')">${r}</button>`).join('')}
+      </div>
+      <div class="field"><label>Note (what are we waiting on?)</label>
+        <input type="text" id="holdNote" placeholder="e.g. waiting on Iron Ore coil, ETA Friday"></div>
+      <button class="btn shopmain block" onclick="confirmHold()">⏸ Put on hold</button>`);
+    return;
+  }
+  if(st==='ready'){
+    const noPhotos=!o.lineItems.some(li=>(li.photos||[]).length);
+    const under=o.lineItems.filter(li=>totalBuilt(li)<li.qtyOrdered);
+    const warns=[];
+    if(under.length)warns.push('Short counts on: '+esc(under.map(l=>l.name+' ('+totalBuilt(l)+'/'+l.qtyOrdered+')').join(', ')));
+    if(noPhotos)warns.push('No finished photo attached \u2014 a photo saves arguments later.');
+    if(warns.length){ closeSheet();
+      askConfirm(warns.join('<br><br>'),'Mark Ready anyway',()=>applyStatus('ready'),{title:'Heads up',noLabel:'Not yet'});
+      return; }
+    applyStatus('ready'); return;
+  }
+  if(st==='done'){ closeSheet(); doDoneFlow(); return; }
+  if(st==='cancelled'){ closeSheet();
+    askConfirm('Cancel order #'+o.num+'? It stays on the books under the Cancelled tab \u2014 nothing gets deleted.','Cancel this order',()=>applyStatus('cancelled'),{danger:1,noLabel:'Keep it open'});
+    return; }
+  applyStatus(st); // received / production — no extra input
+};
+let _holdReason='';
+window.pickHoldReason=function(btn,r){ _holdReason=r;
+  document.querySelectorAll('#holdreasons button').forEach(b=>b.classList.remove('on')); btn.classList.add('on') };
+window.confirmHold=function(){
+  const note=($('#holdNote').value||'').trim();
+  if(!_holdReason){toast('Pick a reason — the office needs to know why it\u2019s stopped.');return}
+  if(_holdReason==='Other'&&!note){toast('"Other" needs a note explaining why.');return}
+  CUR.holdReason=_holdReason; CUR.holdNote=note; _holdReason='';
+  applyStatus('onhold', CUR.holdReason+(note?': '+note:''));
+};
+window.confirmSchedule=function(){
+  const dt=$('#schedDate').value;
+  if(!dt){toast('Pick the expected completion date.');return}
+  CUR.scheduledFor=dt; CUR.scheduledTime=$('#schedTime').value||'';
+  applyStatus('scheduled','Expected '+fmtDate(dt)+(CUR.scheduledTime?' '+CUR.scheduledTime:''));
+};
+async function applyStatus(st,note){
+  CUR.status=st;
+  if(st!=='onhold'){CUR.holdReason='';CUR.holdNote=''}
+  CUR.statusHistory=CUR.statusHistory||[];
+  CUR.statusHistory.push({to:st,at:Date.now(),note:note||''});
+  closeSheet(); const ok=await persistOrder(CUR); render();
+  if(ok)toast('Order #'+CUR.num+' → '+ST_LABEL[st]+' ✓');
+}
+function topRunBy(o){
+  const tally={};
+  o.lineItems.forEach(li=>(li.runs||[]).forEach(r=>{ if(r.by)tally[r.by]=(tally[r.by]||0)+r.qty }));
+  let best=''; let n=0;
+  for(const k in tally){ if(tally[k]>n){n=tally[k];best=k} }
+  return best;
+}
+window.doDoneFlow=function(){
+  const o=CUR;
+  mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>Close out Order #${o.num}</h3>
+    <div class="field"><label>Shop tech (who built it) <span class="req-mark">*</span></label>
+      <input type="text" id="so-tech" value="${esc(o.shopTech||topRunBy(o)||'')}" placeholder="e.g. Randy"></div>
+    <div class="field"><label>QC checked by</label>
+      <input type="text" id="so-qc" value="${esc(o.qcBy||'')}" placeholder="Second set of eyes"></div>
+    <div class="field"><label>${o.fulfillment==='pickup'?'Picked up by':'Delivered by'} <span class="req-mark">*</span></label>
+      <input type="text" id="so-del" value="${esc(o.deliveredBy||'')}" placeholder="Name"></div>
+    <button class="btn shopmain block" onclick="confirmDone()">✔ Mark ${o.fulfillment==='pickup'?'picked up':'delivered'} &amp; done</button>`);
+};
+window.confirmDone=async function(){
+  const tech=($('#so-tech').value||'').trim(), qc=($('#so-qc').value||'').trim(), del=($('#so-del').value||'').trim();
+  if(!tech){toast('Shop tech name is required.');return}
+  if(!del){toast('Who '+(CUR.fulfillment==='pickup'?'picked it up':'delivered it')+'? Name required.');return}
+  const finish=()=>{
+    CUR.shopTech=tech; CUR.qcBy=qc; CUR.qcDate=CUR.qcDate||today();
+    CUR.deliveredBy=del; CUR.deliveredDate=today();
+    applyStatus('done', (CUR.fulfillment==='pickup'?'Picked up by ':'Delivered by ')+del);
+  };
+  if(!qc){ askConfirm('No QC name entered \u2014 close it out without a second set of eyes?','Close it out',finish,{noLabel:'Add QC name'}); return }
+  finish();
+};
+
+function lineItemCard(li,i,o){
+  const it=findItem(li.itemId)||{profile:'custom'};
+  const built=totalBuilt(li), flag=liFlag(li);
+  const locked=['cancelled'].includes(o.status);
+  const active = ROLE==='shop' && ACTIVE_LI===li.id;
+  const expanded = active || (ROLE==='requester'&&VIEW.expand===li.id);
+  const msgs=li.messages||[];
+  const lastFromShop = msgs.length&&msgs[msgs.length-1].from==='shop';
+  const lastFromReq = msgs.length&&msgs[msgs.length-1].from==='requester';
+  return `<div class="li-card ${active?'active':''}" id="li-${li.id}">
+    ${active?`<div class="activebanner">▶ Logging runs for: ${esc(li.name)} — ${esc(li.color)}</div>`:''}
+    <button class="li-head" onclick="toggleLI('${li.id}')">
+      ${profileSVG(it.profile)}
+      <div style="flex:1;min-width:0">
+        <div class="name">${esc(li.name)}</div>
+        <div style="font-size:.86rem;color:var(--grey2)">${esc(li.material||'')} ${esc(li.gauge)} · ${esc(li.color)} · ${lenStr(li.len)}</div>
+        <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">
+          ${li.built?'<span class="chip st-ready">Built ✓</span>':built>0?'<span class="chip st-production">Running</span>':'<span class="chip st-received">Not started</span>'}
+          ${flag?`<span class="chip fl-${flag}">${flag==='under'?'Short '+(li.qtyOrdered-built):flag==='over'?'Over +'+(built-li.qtyOrdered):'Count ✓'}</span>`:''}
+          ${ROLE==='requester'&&lastFromShop?'<span class="chip fl-msg">Question for you</span>':''}
+          ${ROLE==='shop'&&lastFromReq?'<span class="chip fl-msg">Reply from office</span>':''}
+        </div>
+      </div>
+      <div class="qtybox"><div class="big num">${built}<span style="color:var(--grey2)">/${li.qtyOrdered}</span></div><div class="lbl">built / ordered</div></div>
+      <span style="color:var(--grey2);font-size:1.1rem">${expanded?'▾':'▸'}</span>
+    </button>
+    ${expanded?lineItemBody(li,i,o,locked):''}
+  </div>`;
+}
+window.toggleLI=function(id){
+  if(ROLE==='shop'){ ACTIVE_LI = ACTIVE_LI===id?null:id; }
+  else { VIEW.expand = VIEW.expand===id?null:id; }
+  render();
+  const el=document.getElementById('li-'+id); if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});
+};
+
+function lineItemBody(li,i,o,locked){
+  const it=findItem(li.itemId)||{};
+  const built=totalBuilt(li);
+  const pct=li.qtyOrdered?Math.min(100,built/li.qtyOrdered*100):0;
+  const runs=(li.runs||[]).map((r,ri)=>`<span class="runpill">
+      <span class="rq num">${r.qty}<small>Run ${ri+1}${r.by?' \u00B7 '+esc(r.by):''}</small></span>
+      ${ROLE==='shop'&&!locked?`<button class="rx" title="Fix this run" onclick="editRun(${i},${ri})">✎</button>`:''}
+    </span>`).join('');
+  const dimsTxt=li.dims.filter(x=>x.w||x.s).map(x=>`${esc(x.label)}: <b>${dimStr(x)}</b>`).join('&nbsp; · &nbsp;');
+  const matTxt=esc(li.material||o.metalBrand||'');
+  const msgs=(li.messages||[]).map(m=>`<div class="msg ${m.from}"><div class="who">${m.from==='shop'?'Shop':'Office'}</div>${esc(m.text)}</div>`).join('');
+  return `<div class="li-body">
+    ${ROLE==='shop'?bigDiagram(it,li.dims):''}
+    <div class="specline">${matTxt?matTxt+' &nbsp;·&nbsp; ':''}${dimsTxt||'No dimensions given'} &nbsp;·&nbsp; Stick: <b>${lenStr(li.len)}</b>${li.notes?`<br>📝 ${esc(li.notes)}`:''}
+      ${it.specNote?`<br><span style="color:var(--blue-dark)">Spec: ${esc(it.specNote)}</span>`:''}
+      ${li.refPhoto?`<div class="photorow"><img data-pid="${li.refPhoto}" alt="reference" onclick="zoomPhoto('${li.refPhoto}')"></div>`:''}
+    </div>
+    <div class="tally"><span class="built num">${built}</span><span style="color:var(--grey2)">of <b class="num">${li.qtyOrdered}</b></span>
+      <div class="progress"><i class="${built>li.qtyOrdered?'over':built===li.qtyOrdered&&built>0?'done':''}" style="width:${pct}%"></i></div></div>
+
+    ${ROLE==='shop'&&!locked?`
+      <div class="runrow">${runs||'<span style="color:var(--grey2)">No runs logged yet</span>'}</div>
+      <div class="logrow">
+        <button class="bump" onclick="bumpRun(-1)">−1</button>
+        <input id="runinp" type="number" inputmode="numeric" min="1" placeholder="count">
+        <button class="bump" onclick="bumpRun(1)">+1</button>
+        <button class="bump" onclick="bumpRun(5)">+5</button>
+      </div>
+      <div class="logrow">
+        <input id="runby" type="text" placeholder="ran by" value="${esc(RUNBY)}" style="width:150px;font-size:1.05rem;font-weight:400;border-color:var(--lgrey)">
+        <button class="btn shopmain" style="min-height:56px;flex:1;min-width:120px" onclick="logRun(${i})">Log run ✓</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px">Count + who ran it, then Log. It remembers the name for next time. Fat-fingered it? Tap ✎ on the run to fix or delete it.</div>
+      <button class="btn ${li.built?'ghost':'ghost green'} block sm" onclick="toggleBuilt(${i})">${li.built?'↩ Reopen this piece':'✔ All pieces built'+(built<li.qtyOrdered?' ('+built+'/'+li.qtyOrdered+')':'')}</button>
+    `:`<div class="runrow">${runs||'<span style="color:var(--grey2)">Shop hasn\u2019t started this one yet</span>'}</div>`}
+
+    ${(li.photos||[]).length?`<div><b style="font-size:.85rem;text-transform:uppercase;color:var(--grey2)">Finished photos</b>
+      <div class="photorow">${li.photos.map(p=>`<img data-pid="${p}" alt="finished" onclick="zoomPhoto('${p}')">`).join('')}</div></div>`:''}
+    ${ROLE==='shop'&&!locked?`<button class="btn ghost green sm" onclick="addFinPhoto(${i})">📷 Add finished photo</button>`:''}
+
+    <div class="secHead" style="margin-top:14px"><h2 style="font-size:.9rem">Questions on this piece</h2><div class="rule"></div></div>
+    <div class="msgthread">${msgs||'<div style="color:var(--grey2);font-size:.92rem">No questions yet.</div>'}</div>
+    ${!locked?`<div class="msgcompose">
+      <input id="msg-${li.id}" type="text" placeholder="${ROLE==='shop'?'Ask the office a question…':'Reply to the shop…'}">
+      <button class="btn ${ROLE==='shop'?'shopmain':'primary'} sm" onclick="sendMsg(${i})">Send</button></div>`:''}
+  </div>`;
+}
+window.toggleBuilt=function(i){
+  const li=CUR.lineItems[i];
+  if(!li.built){
+    const built=totalBuilt(li);
+    if(built===0){toast('Log at least one run first.');return}
+    if(built<li.qtyOrdered){
+      askConfirm(`Only <b>${built} of ${li.qtyOrdered}</b> logged on ${esc(li.name)}. Mark it built anyway? The office will see a SHORT flag.`,'Mark built short',()=>finishBuilt(i,true),{noLabel:'Keep running'});
+      return; }
+    finishBuilt(i,true);
+  } else finishBuilt(i,false);
+};
+async function finishBuilt(i,val){
+  const li=CUR.lineItems[i]; li.built=val;
+  if(val && CUR.lineItems.every(l=>l.built) && !['done','cancelled','ready'].includes(CUR.status)){
+    CUR.status='ready';
+    CUR.statusHistory.push({to:'ready',at:Date.now(),note:'auto \u2014 all pieces built'});
+    await persistOrder(CUR); render();
+    toast('All pieces built \u2014 Order #'+CUR.num+' moved to Ready To Ship \u2713');
+    return;
+  }
+  if(!val && CUR.status==='ready'){
+    CUR.status='production';
+    CUR.statusHistory.push({to:'production',at:Date.now(),note:'auto \u2014 piece reopened'});
+  }
+  await persistOrder(CUR); render();
+}
+window.bumpRun=n=>{const inp=$('#runinp');if(inp)inp.value=Math.max(0,(parseInt(inp.value)||0)+n)};
+window.logRun=async function(i){
+  const inp=$('#runinp'); const q=parseInt(inp.value)||0;
+  if(q<=0){toast('Enter how many pieces you ran.');return}
+  const by=(($('#runby')||{}).value||'').trim();
+  if(!by){toast('Who ran it? Put a name in \u201Cran by\u201D.');return}
+  if(by!==RUNBY){ RUNBY=by; ssave('trimshop-runby',RUNBY,false) }
+  const li=CUR.lineItems[i];
+  li.runs=li.runs||[]; li.runs.push({qty:q, at:Date.now(), by});
+  if(CUR.status==='received'||CUR.status==='scheduled'){ CUR.status='production'; CUR.statusHistory.push({to:'production',at:Date.now(),note:'auto — first run logged'}) }
+  await persistOrder(CUR); render();
+  toast(`Logged ${q} — ${totalBuilt(li)}/${li.qtyOrdered} built`);
+};
+window.editRun=function(i,ri){
+  const li=CUR.lineItems[i]; const cur=li.runs[ri].qty;
+  mountSheet(`<button class="closex" onclick="closeSheet()">✕</button>
+    <h3>Fix Run ${ri+1} — ${esc(li.name)}</h3>
+    <div class="hint" style="margin-bottom:10px">Change the count if it was typed wrong, or delete the run entirely.</div>
+    <div class="logrow" style="justify-content:center">
+      <button class="bump" onclick="bumpEditRun(-1)">−1</button>
+      <input id="runedit" type="number" inputmode="numeric" min="1" value="${cur}" style="width:130px">
+      <button class="bump" onclick="bumpEditRun(1)">+1</button>
+      <button class="bump" onclick="bumpEditRun(5)">+5</button>
+    </div>
+    <div class="btnrow" style="margin-top:14px">
+      <button class="btn danger" onclick="delRun(${i},${ri})">Delete run</button>
+      <button class="btn shopmain" style="flex:2" onclick="saveRunEdit(${i},${ri})">Save count</button>
+    </div>`);
+};
+window.bumpEditRun=n=>{const inp=$('#runedit');inp.value=Math.max(1,(parseInt(inp.value)||0)+n)};
+window.saveRunEdit=async function(i,ri){
+  const q=parseInt($('#runedit').value)||0;
+  if(q<=0){toast('Count must be at least 1 — or delete the run.');return}
+  CUR.lineItems[i].runs[ri].qty=q; closeSheet(); await persistOrder(CUR); render();
+};
+window.delRun=function(i,ri){
+  askConfirm('Delete this run entry? The count comes off the total.','Delete run',async()=>{
+    CUR.lineItems[i].runs.splice(ri,1); closeSheet(); await persistOrder(CUR); render();
+  },{danger:1,noLabel:'Keep it'});
+};
+window.addFinPhoto=i=>pickPhoto(async data=>{ const id=await savePhoto(data); if(id){ CUR.lineItems[i].photos=CUR.lineItems[i].photos||[]; CUR.lineItems[i].photos.push(id); await persistOrder(CUR); render(); toast('Photo saved ✓') } });
+window.zoomPhoto=async function(pid){
+  const v=await getPhoto(pid); if(!v){toast('Photo not on this device — it may live on the device that took it. Use Export/Import in ▦ to move it.');return}
+  const div=document.createElement('div'); div.className='sheetback'; div.style.alignItems='center';
+  div.onclick=()=>div.remove();
+  div.innerHTML=`<img src="${v}" style="max-width:96vw;max-height:90vh;border-radius:10px">`;
+  document.body.appendChild(div);
+};
+window.sendMsg=async function(i){
+  const li=CUR.lineItems[i]; const inp=$('#msg-'+li.id); const t=(inp.value||'').trim();
+  if(!t)return;
+  li.messages=li.messages||[]; li.messages.push({from:ROLE,text:t,at:Date.now()});
+  await persistOrder(CUR); render(); toast('Sent ✓ — flagged on their side');
+};
+
+window.officePickup=function(){
+  const o=CUR;
+  mountSheet(`<button class="closex" onclick="closeSheet()">✕</button><h3>Order #${o.num} ${o.fulfillment==='pickup'?'picked up':'delivered'}?</h3>
+    <div class="hint" style="margin-bottom:12px">This closes the order out as <b>Done</b>. The shop tech is pulled from the run log.</div>
+    <div class="field"><label>${o.fulfillment==='pickup'?'Picked up by':'Delivered by'} <span class="req-mark">*</span></label>
+      <input type="text" id="pu-name" placeholder="Name"></div>
+    <button class="btn primary block" onclick="confirmPickup()">✔ Mark ${o.fulfillment==='pickup'?'picked up':'delivered'} &amp; done</button>`);
+};
+window.confirmPickup=async function(){
+  const nm=($('#pu-name').value||'').trim();
+  if(!nm){toast('Whose hands did it go to? Name required.');return}
+  CUR.deliveredBy=nm; CUR.deliveredDate=today();
+  if(!CUR.shopTech)CUR.shopTech=topRunBy(CUR);
+  applyStatus('done',(CUR.fulfillment==='pickup'?'Picked up by ':'Delivered by ')+nm+' (marked by office)');
+};
+window.reorder=function(){
+  const c=JSON.parse(JSON.stringify(CUR));
+  delete c.id; delete c.num; delete c._editing;
+  c.status='received'; c.statusHistory=[]; c.holdReason='';c.holdNote='';c.scheduledFor='';c.scheduledTime='';
+  c.dueDate=''; c.orderDate=today();
+  c.shopTech='';c.qcBy='';c.qcDate='';c.deliveredBy='';c.deliveredDate='';
+  c.lineItems.forEach(li=>{ li.id=uid(); li.runs=[]; li.built=false; li.messages=[]; li.photos=[] });
+  DRAFT=c; saveDraft(); VIEW={name:'new'}; render();
+  toast('Copied — set a new need-by date and send it');
+};
+window.editOrder=function(){ DRAFT=JSON.parse(JSON.stringify(CUR)); DRAFT._editing=CUR.id; VIEW={name:'new'}; render() };
+window.cancelOrder=function(){
+  askConfirm('Cancel order #'+CUR.num+'? The shop will see it under Cancelled.','Cancel order',async()=>{
+    CUR.status='cancelled'; CUR.statusHistory.push({to:'cancelled',at:Date.now(),note:'by office'});
+    await persistOrder(CUR); render();
+  },{danger:1,noLabel:'Keep it open'});
+};
+
+function signoffBlock(o){
+  if(!o.shopTech&&!o.deliveredBy)return '';
+  return `<div class="card"><div class="secHead" style="margin-top:0"><h2>Sign-off</h2><div class="rule"></div></div>
+    <div class="kv"><b>Shop tech</b><span>${esc(o.shopTech||'—')}</span></div>
+    <div class="kv"><b>QC by</b><span>${esc(o.qcBy||'—')} ${o.qcDate?'· '+fmtDate(o.qcDate):''}</span></div>
+    <div class="kv"><b>${o.fulfillment==='pickup'?'Picked up by':'Delivered by'}</b><span>${esc(o.deliveredBy||'—')} ${o.deliveredDate?'· '+fmtDate(o.deliveredDate):''}</span></div></div>`;
+}
+
+/* ---------------- CALENDAR VIEW ---------------- */
+window.openCalendar=async function(){
+  const n=new Date(); if(!CAL)CAL={y:n.getFullYear(),m:n.getMonth()};
+  await refreshIndex(); VIEW={name:'cal'}; render();
+};
+window.calShift=function(d){
+  if(d===0){const n=new Date();CAL={y:n.getFullYear(),m:n.getMonth()}}
+  else{ CAL.m+=d; if(CAL.m<0){CAL.m=11;CAL.y--} if(CAL.m>11){CAL.m=0;CAL.y++} }
+  render();
+};
+function renderCalendar(){
+  const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const first=new Date(CAL.y,CAL.m,1);
+  const startDow=first.getDay();
+  const daysIn=new Date(CAL.y,CAL.m+1,0).getDate();
+  const prevDays=new Date(CAL.y,CAL.m,0).getDate();
+  const tIso=today();
+  const iso=(y,m,d)=>y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  const due={}, sched={};
+  INDEX.orders.forEach(o=>{
+    if(o.dueDate){(due[o.dueDate]=due[o.dueDate]||[]).push(o)}
+    if(o.scheduledFor&&!['done','cancelled'].includes(o.status)){(sched[o.scheduledFor]=sched[o.scheduledFor]||[]).push(o)}
+  });
+  let cells='';
+  const total=Math.ceil((startDow+daysIn)/7)*7;
+  for(let c=0;c<total;c++){
+    let y=CAL.y,m=CAL.m,d=c-startDow+1,other=false;
+    if(d<1){ other=true; m=CAL.m-1; if(m<0){m=11;y--} d=prevDays+d }
+    else if(d>daysIn){ other=true; d=d-daysIn; m=CAL.m+1; if(m>11){m=0;y++} }
+    const ds=iso(y,m,d);
+    const chips=(due[ds]||[]).map(o=>`<button class="calchip st-${o.status}" onclick="openOrder('${o.id}')" title="${esc(o.projectName)} — due">⚑ #${o.num} ${esc(o.projectName)}</button>`).join('')
+      +(sched[ds]||[]).map(o=>`<button class="calchip sched" onclick="openOrder('${o.id}')" title="${esc(o.projectName)} — scheduled to finish${o.scheduledTime?' '+o.scheduledTime:''}">📅 #${o.num} ${esc(o.projectName)}${o.scheduledTime?' '+o.scheduledTime:''}</button>`).join('');
+    cells+=`<div class="calcell ${other?'other':''} ${ds===tIso?'today':''}"><div class="dnum">${d}</div>${chips}</div>`;
+  }
+  app.innerHTML = topbar('Calendar','back') + `<div class="wrap">
+    <div class="calhead">
+      <button class="btn ghost sm" onclick="calShift(-1)">← Prev</button>
+      <h2>${MO[CAL.m]} ${CAL.y}</h2>
+      <button class="btn ghost sm" onclick="calShift(1)">Next →</button>
+      <button class="btn ghost sm" onclick="calShift(0)">Today</button>
+    </div>
+    <div class="calgrid">
+      ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="caldow">${x}</div>`).join('')}
+      ${cells}
+    </div>
+    <div class="callegend">
+      <span>⚑ solid chip = <b>need-by date</b> (color = current status)</span>
+      <span><span class="calchip sched" style="display:inline;padding:2px 8px">📅 dashed</span> = shop\u2019s expected completion</span>
+      <span>Tap any chip to open the order.</span>
+    </div>
+  </div>
+  <div id="sheetmount"></div>`;
+}
+
+/* ---------------- REFERENCE VIEW ---------------- */
+const REF_GAUGE=[
+ ['30','0.0120 in (0.305 mm)','0.0125 in (0.318 mm)','0.0100 in (0.254 mm)','Very thin; requires careful setup to avoid cracking.'],
+ ['28','0.0149 in (0.378 mm)','0.0156 in (0.396 mm)','0.0126 in (0.320 mm)','Common for lightweight panels; adjust brake pressure.'],
+ ['26','0.0179 in (0.455 mm)','0.0187 in (0.475 mm)','0.0159 in (0.404 mm)','Suitable for decorative trim; check die clearance.'],
+ ['24','0.0239 in (0.607 mm)','0.0250 in (0.635 mm)','0.0200 in (0.508 mm)','Common for ductwork; standard folding settings.'],
+ ['22','0.0299 in (0.759 mm)','0.0312 in (0.792 mm)','0.0250 in (0.635 mm)','Used for roofing; ensure proper bend radius.'],
+ ['20','0.0359 in (0.912 mm)','0.0375 in (0.953 mm)','0.0320 in (0.813 mm)','Common for siding; good for standard folds.'],
+ ['18','0.0478 in (1.214 mm)','0.0500 in (1.270 mm)','0.0403 in (1.024 mm)','Structural panels; verify tonnage for tight bends.'],
+];
+window.openReference=function(){ VIEW={name:'ref'}; render() };
+function renderReference(){
+  const glossIds=['j-channel','fake-j','l-metal','z-flash','drip','u-channel','valley-brava','inside-corner','outside-corner','coping-cap','roof-cap','hem'];
+  const gloss=glossIds.map(id=>{ const it=findItem(id); if(!it)return '';
+    return `<div class="refcard"><h4>${esc(it.name)}</h4>${bigDiagram(it,it.dims)||'<div class="hint">Custom — per sketch</div>'}${it.alias?`<div class="hint">${esc(it.alias)}</div>`:''}</div>`;
+  }).join('');
+  app.innerHTML = topbar('Reference','back') + `<div class="wrap refwrap">
+    <div class="secHead" style="margin-top:0"><h2>Gauge to Decimal Conversion — Metal Folding</h2><div class="rule"></div></div>
+    <div class="tablewrap"><table style="min-width:720px">
+      <tr><th>Gauge</th><th>Mild Steel</th><th>Stainless Steel</th><th>Aluminum</th><th>Notes for Folding</th></tr>
+      ${REF_GAUGE.map(r=>`<tr><td class="num"><b>${r[0]}</b></td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td>${r[4]}</td></tr>`).join('')}
+    </table></div>
+    <div class="hint" style="margin-top:8px">Nastase Contracting — gauge conversion sheet for metal folding operations. Same numbers as the laminated shop copy.</div>
+    <div class="secHead"><h2>Trim Vocabulary — What We Call Every Part</h2><div class="rule"></div></div>
+    <div class="hint" style="margin-bottom:6px">Same words on the order form, the diagrams, and the brake. If the office says \u201Cface,\u201D this is the face.</div>
+    <div class="refgrid">${gloss}</div>
+  </div>
+  <div id="sheetmount"></div>`;
+}
+
+/* ---------------- SPREADSHEET MASTER VIEW ---------------- */
+window.openSheetView=async function(){ VIEW={name:'sheet'}; render(); await loadAllOrders(); render() };
+async function loadAllOrders(){
+  await refreshIndex();
+  const out=[];
+  for(const s of INDEX.orders){ const o=await loadOrder(s.id); if(o)out.push(o) }
+  ALLORDERS=out;
+}
+function renderSheetView(){
+  const cols=[
+    ['num','#'],['projectName','Project'],['gcClient','Customer'],['status','Status'],
+    ['orderDate','Received'],['scheduledFor','Scheduled'],['dueDate','Due'],
+    ['holdReason','Hold Reason'],['pieces','Pcs'],['lf','Total LF'],['builtlf','Built LF'],
+    ['photos','📷'],['notes','Notes']
+  ];
+  let rows=null;
+  if(ALLORDERS){
+    rows=ALLORDERS.map(o=>({ id:o.id, num:o.num, projectName:o.projectName, gcClient:o.gcClient||'',
+      status:o.status, orderDate:o.orderDate, scheduledFor:o.scheduledFor?(o.scheduledFor+(o.scheduledTime?' '+o.scheduledTime:'')):'',
+      dueDate:o.dueDate, holdReason:o.status==='onhold'?(o.holdReason+(o.holdNote?': '+o.holdNote:'')):'',
+      pieces:o.lineItems.reduce((a,l)=>a+l.qtyOrdered,0), lf:Math.round(orderLF(o)*10)/10, builtlf:Math.round(orderBuiltLF(o)*10)/10,
+      photos:o.lineItems.reduce((a,l)=>a+(l.photos||[]).length,0)||'',
+      notes:[o.specialNotes||'', ...o.lineItems.filter(l=>l.notes).map(l=>l.name+': '+l.notes)].filter(Boolean).join(' | ') }));
+    if(SHEET_STATUS!=='all') rows=rows.filter(r=>r.status===SHEET_STATUS);
+    if(SHEET_Q){ const q=SHEET_Q.toLowerCase(); rows=rows.filter(r=>(r.projectName+' '+r.gcClient+' '+r.notes+' #'+r.num).toLowerCase().includes(q)) }
+    rows.sort((a,b)=>{ const k=SHEET_SORT.key; const av=a[k]==null?'':a[k], bv=b[k]==null?'':b[k];
+      const r=(typeof av==='number'&&typeof bv==='number')?av-bv:String(av).localeCompare(String(bv)); return r*SHEET_SORT.dir });
+  }
+  app.innerHTML = topbar('All Orders','back') + `<div class="wrap">
+    <div class="sheettools">
+      <select onchange="SHEET_STATUS=this.value;render()">
+        <option value="all" ${SHEET_STATUS==='all'?'selected':''}>All statuses</option>
+        ${STATUSES.map(s=>`<option value="${s.id}" ${SHEET_STATUS===s.id?'selected':''}>${s.label}</option>`).join('')}
+      </select>
+      <input type="text" placeholder="Search project, customer, notes…" value="${esc(SHEET_Q)}" oninput="SHEET_Q=this.value;render()">
+      <button class="btn ghost sm" onclick="exportCSV()">⬇ CSV</button>
+      <button class="btn ghost sm" onclick="exportJSON()">⬇ Backup</button>
+      <button class="btn ghost sm" onclick="importJSON()">⬆ Import</button>
+    </div>
+    ${rows===null?'<div class="empty"><h3>Loading orders…</h3></div>':
+      rows.length===0?'<div class="empty"><h3>No orders match</h3><p>Change the status filter or clear the search.</p></div>':
+    `<div class="tablewrap"><table class="sheetv">
+      <tr>${cols.map(c=>`<th onclick="sortSheet('${c[0]}')">${c[1]} ${SHEET_SORT.key===c[0]?`<span class="arr">${SHEET_SORT.dir>0?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>
+      ${rows.map(r=>`<tr onclick="openOrder('${r.id}')">
+        <td class="num">#${r.num}</td><td><b>${esc(r.projectName)}</b></td><td>${esc(r.gcClient)}</td>
+        <td><span class="chip st-${r.status}">${ST_LABEL[r.status]}</span></td>
+        <td class="num">${fmtDate(r.orderDate)}</td><td class="num">${r.scheduledFor?fmtDate(r.scheduledFor.split(' ')[0])+(r.scheduledFor.split(' ')[1]?' '+r.scheduledFor.split(' ')[1]:''):'—'}</td>
+        <td class="num">${fmtDate(r.dueDate)}</td><td>${esc(r.holdReason)||'—'}</td>
+        <td class="num">${r.pieces}</td><td class="num">${r.lf}</td><td class="num">${r.builtlf}</td>
+        <td class="num">${r.photos}</td><td title="${esc(r.notes)}">${esc(r.notes)||'—'}</td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="hint" style="margin-top:8px">Tap a column header to sort. Tap a row to open the order. CSV exports one row per trim piece — good for procurement and pricing work.</div>`}
+  </div>
+  <div id="sheetmount"></div>`;
+}
+window.sortSheet=k=>{ if(SHEET_SORT.key===k)SHEET_SORT.dir*=-1; else SHEET_SORT={key:k,dir:1}; render() };
+function csvEsc(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v }
+window.exportCSV=async function(){
+  if(!ALLORDERS)await loadAllOrders();
+  const head=['Order #','Project','Customer','Requester','Status','Received','Scheduled','Due','Hold Reason','Fulfillment','Material','Item','Gauge','Color','Stick Length','Dims','Qty Ordered','Qty Built','Run By','Line LF Ordered','Line LF Built','Notes'];
+  const lines=[head.join(',')];
+  for(const o of ALLORDERS){ for(const li of o.lineItems){
+    lines.push([o.num,o.projectName,o.gcClient||'',o.requesterName||'',ST_LABEL[o.status],o.orderDate,o.scheduledFor||'',o.dueDate,
+      o.status==='onhold'?(o.holdReason||''):'',o.fulfillment,li.material||o.metalBrand||'',li.name,li.gauge,li.color,lenStr(li.len),
+      li.dims.filter(x=>x.w||x.s).map(x=>x.label+' '+dimStr(x)).join('; '),
+      li.qtyOrdered,totalBuilt(li),[...new Set((li.runs||[]).map(r=>r.by).filter(Boolean))].join('; '),Math.round(li.qtyOrdered*lenInches(li.len)/12*10)/10,Math.round(totalBuilt(li)*lenInches(li.len)/12*10)/10,
+      [o.specialNotes,li.notes].filter(Boolean).join(' | ')].map(csvEsc).join(','));
+  }}
+  downloadFile('nastase-trim-orders.csv', lines.join('\r\n'), 'text/csv');
+  toast('CSV exported ✓');
+};
+window.exportJSON=async function(){
+  if(!ALLORDERS)await loadAllOrders();
+  const photos={};
+  for(const o of ALLORDERS){ for(const li of o.lineItems){
+    for(const pid of (li.photos||[]).concat(li.refPhoto?[li.refPhoto]:[])){
+      const v=await getPhoto(pid); if(v)photos[pid]=v; } } }
+  const bundle={v:2, exported:new Date().toISOString(), index:INDEX, orders:ALLORDERS, photos};
+  downloadFile('nastase-trimshop-backup.json', JSON.stringify(bundle), 'application/json');
+  toast('Backup exported ✓ — open Import on the other device and pick this file');
+};
+window.importJSON=function(){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='.json,application/json';
+  inp.style.position='fixed';inp.style.left='-9999px';document.body.appendChild(inp);
+  inp.onchange=async()=>{ const f=inp.files&&inp.files[0]; document.body.removeChild(inp); if(!f)return;
+    try{
+      const txt=await f.text(); const b=JSON.parse(txt);
+      if(!b.orders||!b.index)throw new Error('bad file');
+      askConfirm('Import '+b.orders.length+' orders from this backup? Orders with the same # will be replaced.','Import',async()=>{ await doImport(b) },{noLabel:'Cancel'});
+      return;
+    }catch(e){ toast('\u26A0 Couldn\u2019t read that file \u2014 make sure it\u2019s a trimshop backup .json') }
+  };
+  inp.click();
+};
+async function doImport(b){
+    try{
+      const idx=await sload(KEY_INDEX,true)||{seq:1,orders:[]};
+      for(const o of b.orders){ await ssave(OK(o.id),o,true);
+        const i=idx.orders.findIndex(x=>x.id===o.id); const sum=summarize(migrateOrder(o));
+        if(i>=0)idx.orders[i]=sum; else idx.orders.push(sum);
+        if(o.num>=idx.seq)idx.seq=o.num+1; }
+      idx.orders.sort((a,b2)=>b2.num-a.num);
+      INDEX=idx; await ssave(KEY_INDEX,idx,true);
+      for(const pid in (b.photos||{})){ await rawSet(PK(pid),b.photos[pid],true); photoCache[pid]=b.photos[pid] }
+      ALLORDERS=null; await loadAllOrders(); render(); toast('Imported ✓ — '+b.orders.length+' orders');
+    }catch(e){ toast('\u26A0 Couldn\u2019t import that backup.') }
+}
+function downloadFile(name,content,type){
+  const blob=new Blob([content],{type}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a);
+  a.click(); setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url)},500);
+}
+
+/* =====================================================================
+   AUTO-REFRESH + NEW-ORDER CHIME (Shop production portal)
+   Two layers, both on by default:
+   1. Supabase Realtime — pushes a change the instant it happens (needs
+      Realtime turned on for kv_store in the Supabase dashboard).
+   2. A 25s poll — a safety net that works even if step 1 isn't set up,
+      or the realtime socket drops.
+   ===================================================================== */
+let AUDIO_CTX=null;
+document.addEventListener('pointerdown', function unlock(){ try{ if(!AUDIO_CTX) AUDIO_CTX=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} document.removeEventListener('pointerdown',unlock); }, {once:true});
+function playChime(){
+  try{
+    if(!AUDIO_CTX) AUDIO_CTX=new (window.AudioContext||window.webkitAudioContext)();
+    const ctx=AUDIO_CTX, t0=ctx.currentTime;
+    [[880,t0],[1175,t0+.14]].forEach(([freq,t])=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.value=freq;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.25,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.32);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+.34);
+    });
+  }catch(e){}
+}
+
+let KNOWN_ORDER_IDS=null;
+function seedKnownOrders(){ KNOWN_ORDER_IDS=new Set(INDEX.orders.map(o=>o.id)); }
+
+let POLL_BUSY=false;
+async function pollForNewOrders(){
+  if(!SB_READY || POLL_BUSY) return;
+  POLL_BUSY=true;
+  try{
+    const prevIds=KNOWN_ORDER_IDS;
+    await refreshIndex();
+    const newOnes = prevIds ? INDEX.orders.filter(o=>!prevIds.has(o.id)) : [];
+    seedKnownOrders();
+    if(newOnes.length && ROLE==='shop'){
+      playChime();
+      toast(newOnes.length===1 ? '\uD83D\uDD14 New order \u2014 #'+newOnes[0].num : '\uD83D\uDD14 '+newOnes.length+' new orders in');
+    }
+    if(VIEW.name==='home') render();
+  } finally { POLL_BUSY=false; }
+}
+
+function initRealtime(){
+  seedKnownOrders();
+  setInterval(pollForNewOrders, 25000); // safety-net poll, always on
+  if(!SB_READY || !sb) return;
+  try{
+    sb.channel('kv_store-changes')
+      .on('postgres_changes', {event:'*', schema:'public', table:'kv_store'}, payload=>{
+        const k=(payload.new&&payload.new.key)||(payload.old&&payload.old.key)||'';
+        if(k===KEY_INDEX || k.indexOf(OK(''))===0) pollForNewOrders();
+      })
+      .subscribe();
+  }catch(e){}
+}
+
+/* ---------------- PRINT ---------------- */
+window.printOrder=()=>window.print();
+function printSheet(o){
+  return `<div class="printonly">
+    <h1>NASTASE CONTRACTING — METAL TRIM SHOP ORDER #${o.num}</h1>
+    <div>Project: <b>${esc(o.projectName)}</b> &nbsp; | &nbsp; GC/Client: ${esc(o.gcClient||'—')} &nbsp; | &nbsp; Ordered by: ${esc(o.requesterName)}</div>
+    <div>Status: <b>${ST_LABEL[o.status]}</b>${o.scheduledFor?' (sched '+fmtDate(o.scheduledFor)+')':''}${o.holdReason?' — HOLD: '+esc(o.holdReason):''}</div>
+    <div>Order date: ${fmtDate(o.orderDate)} &nbsp; | &nbsp; Due: <b>${fmtDate(o.dueDate)}</b> &nbsp; | &nbsp; ${o.fulfillment==='pickup'?'PICKUP AT SHOP':'DELIVER: '+esc(o.deliveryAddress||o.jobAddress||'')}</div>
+    ${o.specialNotes?`<div>Notes: ${esc(o.specialNotes)}</div>`:''}
+    <table><tr><th>Piece</th><th>Dimensions</th><th>Gauge / Color / Stick</th><th>Ordered</th><th>Runs</th><th>Built</th></tr>
+    ${o.lineItems.map(li=>`<tr>
+      <td><b>${esc(li.name)}</b>${li.notes?'<br>'+esc(li.notes):''}</td>
+      <td>${li.dims.filter(x=>x.w||x.s).map(x=>esc(x.label)+' '+dimStr(x)).join(', ')||'—'}</td>
+      <td>${esc(li.material||o.metalBrand||'')} · ${esc(li.gauge)} / ${esc(li.color)} / ${lenStr(li.len)}</td>
+      <td>${li.qtyOrdered}</td>
+      <td>${(li.runs||[]).map(r=>r.qty).join(' + ')||'—'}</td>
+      <td><b>${totalBuilt(li)}</b></td></tr>`).join('')}
+    </table>
+    <div class="signrow">Shop Tech: <span class="signline">${esc(o.shopTech||'')}</span> &nbsp;&nbsp; Date completed: <span class="signline"></span></div>
+    <div class="signrow">QC Check by: <span class="signline">${esc(o.qcBy||'')}</span> &nbsp;&nbsp; QC date: <span class="signline">${o.qcDate?fmtDate(o.qcDate):''}</span></div>
+    <div class="signrow">${o.fulfillment==='pickup'?'Picked up by':'Delivered by'}: <span class="signline">${esc(o.deliveredBy||'')}</span> &nbsp;&nbsp; Date: <span class="signline">${o.deliveredDate?fmtDate(o.deliveredDate):''}</span></div>
+    <div style="margin-top:14px;font-size:10px">Nastase Contracting Inc. | Metal Trim Shop | Internal use only — printed ${fmtDate(today())}</div>
+  </div>`;
+}
+
+/* ---------------- boot ---------------- */
+(async function(){
+  app.innerHTML='<div class="empty" style="padding-top:120px"><h3>Loading…</h3></div>';
+  try{
+    if(!SB_READY){
+      const b=$('#offlinebanner');
+      b.textContent = (window.supabase)
+        ? '\u26A0 Server isn\u2019t configured yet (paste your Supabase URL/key into the file) \u2014 running from a local copy on this device only.'
+        : '\u26A0 Couldn\u2019t load the server library \u2014 check your internet connection. Running from a local copy on this device only.';
+      b.style.display='block';
+      if(!LS_OK){ b.textContent='\u26A0 This browser can\u2019t save data — anything you enter disappears when you close it.'; }
+    }
+    const savedBy=await sload('trimshop-runby',false);
+    if(savedBy)RUNBY=savedBy;
+    const savedRole=await sload('trimshop-device-role',false);
+    if(savedRole==='shop'||savedRole==='requester')ROLE=savedRole;
+    const idx=await sload(KEY_INDEX,true);
+    if(idx)INDEX=idx;
+  }catch(e){}
+  render();
+  initRealtime();
+})();
+</script>
+</body>
+</html>
