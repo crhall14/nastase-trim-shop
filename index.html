@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>nastase-trim-shop</title>
+<title>Nastase Trim Shop</title>
 <style>
 /* ============ NASTASE BRAND TOKENS ============ */
 :root{
@@ -386,59 +386,59 @@ async function sdel(key,shared){ return rawDel(key,shared) }
 const CATALOG = [
  {cat:'Flashing & Trim', items:[
    {id:'z-flash', name:'Z Flashing', alias:'Z Metal · Backer Z (scrap color OK)', profile:'z',
-    dims:[d('Top leg',2,0),d('Web',1,0),d('Bottom leg',2,0)]},
+    dims:[d('A',2,0),d('B',1,0),d('C',2,0)]},
    {id:'l-metal', name:'L Metal', alias:'L Flashing / Angle — single or double', profile:'l',
-    dims:[d('Leg A',2,0),d('Leg B',1,8),d('Hem',0,8)]},
+    dims:[d('A',2,0),d('B',1,8),d('C',0,8)]},
    {id:'drip', name:'Drip Edge', alias:'Drip Metal — std, groove, or kick-out', profile:'drip',
-    dims:[d('Face',2,0),d('Top',1,2),d('Kick',0,8)]},
-   {id:'d-style', name:'D-Style Drip', profile:'dstyle', dims:[d('Face',0,0),d('Top',0,0)]},
-   {id:'wall-flash', name:'Wall Flashing', alias:'Sidewall / Headwall', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'brick-flash', name:'Brick Flashing', alias:'Brick Cap Metal / Masonry', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'apron-flash', name:'Apron Flashing', alias:'Continuous Flashing', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
-   {id:'step-flash', name:'Step Flashing', alias:'roof-to-wall, chimneys, dormers', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'counter-flash', name:'Counter Flashing', alias:'Reglet Flashing', profile:'fakej', dims:[d('Lip',0,8),d('Face',0,0),d('Kick',0,0)]},
+    dims:[d('A',2,0),d('B',1,2),d('C',0,8)]},
+   {id:'d-style', name:'D-Style Drip', profile:'dstyle', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'wall-flash', name:'Wall Flashing', alias:'Sidewall / Headwall', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'brick-flash', name:'Brick Flashing', alias:'Brick Cap Metal / Masonry', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'apron-flash', name:'Apron Flashing', alias:'Continuous Flashing', profile:'drip', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
+   {id:'step-flash', name:'Step Flashing', alias:'roof-to-wall, chimneys, dormers', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'counter-flash', name:'Counter Flashing', alias:'Reglet Flashing', profile:'fakej', dims:[d('A',0,8),d('B',0,0),d('C',0,0)]},
    {id:'kickout', name:'Kick-out Flashing', alias:'sketch or photo helps', profile:'custom', dims:[]},
-   {id:'gravel-stop', name:'Gravel Stop', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
+   {id:'gravel-stop', name:'Gravel Stop', profile:'drip', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
  ]},
  {cat:'Channels & J-Trims', items:[
    {id:'j-channel', name:'J Channel', profile:'j',
-    dims:[d('Face',2,0),d('Channel',1,8),d('Return',0,8),d('Opening',1,2)]},
-   {id:'fake-j', name:'Fake J', profile:'fakej', dims:[d('Hem',0,8),d('Face',1,8),d('Leg',0,8)]},
-   {id:'u-channel', name:'U Channel', profile:'u', dims:[d('Leg A',0,0),d('Base',0,0),d('Leg B',0,0)]},
+    dims:[d('A',2,0),d('B',1,8),d('C',0,8),d('D',1,2)]},
+   {id:'fake-j', name:'Fake J', profile:'fakej', dims:[d('A',0,8),d('B',1,8),d('C',0,8)]},
+   {id:'u-channel', name:'U Channel', profile:'u', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
    {id:'custom-channel', name:'Custom Channel', alias:'describe or sketch it', profile:'custom', dims:[]},
  ]},
  {cat:'Caps & Coping', items:[
-   {id:'coping-cap', name:'Coping Cap', alias:'parapet / wall — any width & slope', profile:'cap', dims:[d('Face A',0,0),d('Top',0,0),d('Face B',0,0)]},
-   {id:'roof-cap', name:'Roof / Ridge / Hip Cap', profile:'ridge', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'brick-cap', name:'Brick Cap', profile:'cap', dims:[d('Face A',0,0),d('Top',0,0),d('Face B',0,0)]},
+   {id:'coping-cap', name:'Coping Cap', alias:'parapet / wall — any width & slope', profile:'cap', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
+   {id:'roof-cap', name:'Roof / Ridge / Hip Cap', profile:'ridge', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'brick-cap', name:'Brick Cap', profile:'cap', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
    {id:'custom-cap', name:'Custom Cap (per spec)', alias:'sketch or photo required', profile:'custom', dims:[]},
  ]},
  {cat:'Cleats, Clips & Accessories', items:[
-   {id:'coping-cleat', name:'Coping Cleat', alias:'Lock Strip', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'cleat', name:'Cleat', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
-   {id:'cap-clip', name:'Cap Clip', profile:'u', dims:[d('Leg A',0,0),d('Base',0,0),d('Leg B',0,0)]},
-   {id:'rake-cleat', name:'Rake Cleat', alias:'or other custom cleat', profile:'l', dims:[d('Leg A',0,0),d('Leg B',0,0)]},
+   {id:'coping-cleat', name:'Coping Cleat', alias:'Lock Strip', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'cleat', name:'Cleat', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
+   {id:'cap-clip', name:'Cap Clip', profile:'u', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
+   {id:'rake-cleat', name:'Rake Cleat', alias:'or other custom cleat', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
  ]},
  {cat:'Valleys', items:[
-   {id:'valley-std', name:'Roof Valley (Standard)', alias:'open or closed per spec', profile:'valley', dims:[d('Leg A',12,0),d('Leg B',12,0),d('Center crimp',1,0)]},
+   {id:'valley-std', name:'Roof Valley (Standard)', alias:'open or closed per spec', profile:'valley', dims:[d('A',12,0),d('B',12,0),d('C',1,0)]},
    {id:'valley-brava', name:'Roof Valley (Brava)', alias:'W-style, per Brava detail', profile:'valley',
-    dims:[d('Leg A',12,0),d('Leg B',12,0),d('Center crimp',1,0)],
+    dims:[d('A',12,0),d('B',12,0),d('C',1,0)],
     specNote:'Per Brava detail: 24\u2033 wide minimum \u201CW\u201D style, 1\u2033 center crimp, 24\u201326 gauge recommended. Valley metal extends 12\u2033 each side of valley center. Fasteners approx. 5\u2033 from center of valley.'},
-   {id:'valley-custom', name:'Custom Valley Profile', alias:'describe or sketch it', profile:'valley', dims:[d('Leg A',0,0),d('Leg B',0,0),d('Center crimp',0,0)]},
+   {id:'valley-custom', name:'Custom Valley Profile', alias:'describe or sketch it', profile:'valley', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
  ]},
  {cat:'Gutters, Fascia & Drainage', items:[
-   {id:'gutter', name:'Custom Bent Gutter', alias:'box / custom profile — not roll-formed K-style', profile:'u', dims:[d('Back',0,0),d('Bottom',0,0),d('Front',0,0)]},
-   {id:'gutter-apron', name:'Gutter Apron', profile:'drip', dims:[d('Face',0,0),d('Top',0,0),d('Kick',0,0)]},
-   {id:'fascia', name:'Fascia', alias:'bent fascia cover / trim', profile:'l', dims:[d('Face',0,0),d('Return',0,0)]},
+   {id:'gutter', name:'Custom Bent Gutter', alias:'box / custom profile — not roll-formed K-style', profile:'u', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
+   {id:'gutter-apron', name:'Gutter Apron', profile:'drip', dims:[d('A',0,0),d('B',0,0),d('C',0,0)]},
+   {id:'fascia', name:'Fascia', alias:'bent fascia cover / trim', profile:'l', dims:[d('A',0,0),d('B',0,0)]},
    {id:'scupper', name:'Scupper', alias:'through-wall / parapet drain — sketch required', profile:'custom', dims:[]},
  ]},
  {cat:'Corners & Special Shapes', items:[
-   {id:'inside-corner', name:'Inside Corner', profile:'incorner', dims:[d('Leg A',2,0),d('Leg B',2,0),d('Hems',0,8)]},
-   {id:'outside-corner', name:'Outside Corner', profile:'outcorner', dims:[d('Leg A',2,0),d('Leg B',2,0),d('Hems',0,8)]},
+   {id:'inside-corner', name:'Inside Corner', profile:'incorner', dims:[d('A',2,0),d('B',2,0),d('C',0,8)]},
+   {id:'outside-corner', name:'Outside Corner', profile:'outcorner', dims:[d('A',2,0),d('B',2,0),d('C',0,8)]},
    {id:'box-corner', name:'Box / Mitered Corner', alias:'sketch or photo required', profile:'custom', dims:[]},
  ]},
  {cat:'Custom Bends & Specialty', items:[
-   {id:'hem', name:'Hemmed Edge', alias:'safety + rigidity — most profiles', profile:'hem', dims:[d('Width',0,0),d('Hem',0,8)]},
+   {id:'hem', name:'Hemmed Edge', alias:'safety + rigidity — most profiles', profile:'hem', dims:[d('A',0,0),d('B',0,8)]},
    {id:'custom', name:'Custom Profile', alias:'drawing, dims, angles, or template', profile:'custom', dims:[]},
    {id:'specialty', name:'Specialty Item', alias:'cricket, pan, transition, etc.', profile:'custom', dims:[]},
  ]},
@@ -539,6 +539,8 @@ function colorsForMaterial(m){
 }
 const GAUGES = ['29 ga','26 ga','24 ga','22 ga','20 ga','18 ga'];
 const GAUGE_HINTS = {'29 ga':'Light-duty trim & flashing','26 ga':'Decorative trim \u2014 check die clearance','24 ga':'Standard \u2014 most common','22 ga':'Heavier-duty flashing & caps','20 ga':'Structural \u2014 gutters, coping, high-wind','18 ga':'Specialty \u2014 galvanized Z-girts only'};
+const COLOR_SIDES = [ {id:'outside',label:'Outside'}, {id:'inside',label:'Inside'}, {id:'both',label:'Both'} ];
+const CS_LABEL={}; COLOR_SIDES.forEach(c=>CS_LABEL[c.id]=c.label);
 
 /* ---------------- fractions / lengths ---------------- */
 const FRACS = [[0,''],[1,'1/16'],[2,'1/8'],[3,'3/16'],[4,'1/4'],[5,'5/16'],[6,'3/8'],[7,'7/16'],[8,'1/2'],[9,'9/16'],[10,'5/8'],[11,'11/16'],[12,'3/4'],[13,'13/16'],[14,'7/8'],[15,'15/16']];
@@ -607,6 +609,7 @@ function migrateOrder(o){
     if(!li.material) li.material = ({'PAC-Clad':'Pre-finished Steel (PAC-Clad)','Trim Coil (Ply Gem)':'Pre-finished Trim Coil / Coil Stock','Mild Steel (stock)':'Mild Steel','Aluminum (stock)':'Aluminum'})[o.metalBrand] || o.metalBrand || 'Pre-finished Steel (PAC-Clad)';
     (li.runs||[]).forEach(r=>{ if(r.by===undefined) r.by='' });
     if(li.built===undefined) li.built=['complete','qc','ready','done'].includes(li.status);
+    if(li.colorSide===undefined) li.colorSide='';
     li.runs=li.runs||[]; li.messages=li.messages||[]; li.photos=li.photos||[];
   });
   if(!o.status){
@@ -618,6 +621,7 @@ function migrateOrder(o){
       else o.status='received'; }
   }
   o.statusHistory=o.statusHistory||[];
+  if(o.readyAcked===undefined) o.readyAcked = o.status!=='ready';
   return o;
 }
 
@@ -627,6 +631,7 @@ function summarize(o){ return { id:o.id, num:o.num, projectName:o.projectName, g
   items:o.lineItems.length, pieces:o.lineItems.reduce((a,l)=>a+(l.qtyOrdered||0),0),
   lf:Math.round(orderLF(o)*10)/10,
   openQ:hasOpenQuestion(o), newReply:hasNewReply(o), late:isLate(o),
+  readyAlert:o.status==='ready'&&!o.readyAcked,
   under:o.lineItems.some(li=>li.built&&liFlag(li)==='under') } }
 
 async function persistOrder(o){
@@ -680,6 +685,7 @@ const app=$('#app');
 function isDesktop(){ return (window.innerWidth||0)>=760 }
 function render(){
   if(!ROLE){ renderGate(); return }
+  if(typeof updateTitleBadge==='function') updateTitleBadge();
   const wide = VIEW.name==='sheet' || VIEW.name==='cal' || (VIEW.name==='home'&&ROLE==='shop');
   document.body.className = (ROLE==='shop'?'shopview':'reqview')+(wide?' wide':'');
   if(VIEW.name==='home') ROLE==='shop'?renderShopHome():renderReqHome();
@@ -696,6 +702,7 @@ function topbar(title,backTo){
     ${backTo?`<button class="iconbtn" onclick="goBack()" aria-label="Back">←</button>`:nlogo()}
     <div class="brand">${title||'Nastase'}<small>Metal Trim Shop</small></div>
     <span class="mode ${ROLE==='shop'?'shop':'req'}">${ROLE==='shop'?'Shop':'Office'}</span>
+    <button class="iconbtn" title="${typeof Notification!=='undefined'&&Notification.permission==='granted'?'Alerts on':'Tap to enable alert popups'}" onclick="enableNotifications()">${typeof Notification!=='undefined'&&Notification.permission==='granted'?'🔔':'🔕'}</button>
     <button class="iconbtn" title="All orders — spreadsheet view" onclick="openSheetView()">▦</button>
     <button class="iconbtn" title="Switch user" onclick="switchUser()">⇄</button>
   </div>`;
@@ -764,10 +771,11 @@ function orderCard(s){
       ${s.status==='scheduled'&&s.scheduledFor?`<span>📅 Sched <b class="num">${fmtDate(s.scheduledFor)}${s.scheduledTime?' '+s.scheduledTime:''}</b></span>`:''}
       <span>${s.fulfillment==='pickup'?'Pickup':'Deliver'}</span>
     </div>
-    ${(s.late||s.openQ||s.newReply||s.under||(s.status==='onhold'&&s.holdReason))?`<div class="flags">
+    ${(s.late||s.openQ||s.newReply||s.under||s.readyAlert||(s.status==='onhold'&&s.holdReason))?`<div class="flags">
       ${s.late?'<span class="chip fl-late">Past due</span>':''}
       ${s.status==='onhold'&&s.holdReason?`<span class="chip st-onhold">⏸ ${esc(s.holdReason)}</span>`:''}
       ${ROLE==='requester'&&s.openQ?'<span class="chip fl-msg">Shop asked a question</span>':''}
+      ${ROLE==='requester'&&s.readyAlert?'<span class="chip fl-msg">📦 Ready — needs pickup</span>':''}
       ${ROLE==='shop'&&s.newReply?'<span class="chip fl-msg">Office replied</span>':''}
       ${s.under?'<span class="chip fl-under">Short count</span>':''}
     </div>`:''}
@@ -777,6 +785,9 @@ window.openOrder=async id=>{
   const o=await loadOrder(id);
   if(!o){toast('\u26A0 Couldn\u2019t load that order. If you\u2019re on a different device, use Export/Import in the ▦ view to move data over.');return}
   CUR=o; ACTIVE_LI=null; VIEW={name:'order',id}; render();
+  if(ROLE==='requester' && o.status==='ready' && !o.readyAcked){
+    o.readyAcked=true; await persistOrder(o);
+  }
 };
 
 /* ---------------- REQUESTER HOME ---------------- */
@@ -785,7 +796,7 @@ function renderReqHome(){
   const all=INDEX.orders;
   const groups={
     open: all.filter(s=>!['done','cancelled'].includes(s.status)),
-    needs: all.filter(s=>s.openQ&&!['done','cancelled'].includes(s.status)),
+    needs: all.filter(s=>(s.openQ||s.readyAlert)&&!['done','cancelled'].includes(s.status)),
     done: all.filter(s=>['done','cancelled'].includes(s.status)),
     all
   };
@@ -820,7 +831,7 @@ window.seedSample=async function(){ const o=sampleOrder(); await persistOrder(o)
 function sampleOrder(){
   const num=INDEX.seq++;
   const li=(itemId,qty)=>{ const it=findItem(itemId);
-    return { id:uid(), itemId, name:it.name, material:'Pre-finished Steel (PAC-Clad)', gauge:'24 ga', color:'Iron Ore', len:{ft:10,in:0,s:0},
+    return { id:uid(), itemId, name:it.name, material:'Pre-finished Steel (PAC-Clad)', gauge:'24 ga', color:'Iron Ore', colorSide:'outside', len:{ft:10,in:0,s:0},
       dims:it.dims.map(x=>({label:x.label,w:x.w,s:x.s})), notes:'', qtyOrdered:qty, runs:[], built:false, messages:[], photos:[] } };
   const o={ id:uid(), num, projectName:'1500 Meadowlake Pkwy', jobAddress:'1500 Meadowlake Pkwy, Kansas City', gcClient:'Hausmann',
     requesterName:'Alex',
@@ -850,8 +861,8 @@ function blankDraft(){ return { projectName:'',jobAddress:'',gcClient:'',request
   dueDate:'',fulfillment:'delivery',deliveryAddress:'',specialNotes:'',lineItems:[] } }
 function lastLineDefaults(){
   const prev=DRAFT&&DRAFT.lineItems.length?DRAFT.lineItems[DRAFT.lineItems.length-1]:null;
-  return prev? {material:prev.material,gauge:prev.gauge,color:prev.color}
-             : {material:MATERIALS[0],gauge:'24 ga',color:''};
+  return prev? {material:prev.material,gauge:prev.gauge,color:prev.color,colorSide:prev.colorSide}
+             : {material:MATERIALS[0],gauge:'24 ga',color:'',colorSide:''};
 }
 async function saveDraft(){ await ssave('trimshop-draft',DRAFT,false) }
 
@@ -910,7 +921,7 @@ function draftLine(li,i){
       <div class="num" style="font-size:.9rem;color:var(--grey2)">
         ${li.dims.filter(x=>x.w||x.s).map(x=>`${esc(x.label)} ${dimStr(x)}`).join(' · ')||(li.itemId==='custom'?'custom — see notes/photo':'no dims set')}
       </div>
-      <div style="font-size:.88rem;color:var(--grey2)">${esc(li.material||'')} · ${esc(li.gauge)} · ${esc(li.color)} · ${lenStr(li.len)} sticks</div>
+      <div style="font-size:.88rem;color:var(--grey2)">${esc(li.material||'')} · ${esc(li.gauge)} · ${esc(li.color)}${li.colorSide?' ('+CS_LABEL[li.colorSide]+')':''} · ${lenStr(li.len)} sticks</div>
     </div>
     <div style="text-align:right">
       <div class="num" style="font-size:1.3rem;font-weight:800">×${li.qtyOrdered}</div>
@@ -959,7 +970,7 @@ window.openItemPicker=function(cat){
 window.chooseItem=function(id){
   const it=findItem(id);
   const dft=lastLineDefaults();
-  const li={ id:uid(), itemId:id, name:it.name, material:dft.material, gauge:dft.gauge, color:dft.color, len:{ft:10,in:0,s:0},
+  const li={ id:uid(), itemId:id, name:it.name, material:dft.material, gauge:dft.gauge, color:dft.color, colorSide:dft.colorSide||'', len:{ft:10,in:0,s:0},
     dims: it.dims.map(x=>({label:x.label,w:x.w,s:x.s})), notes:'', qtyOrdered:0, runs:[], built:false, messages:[], photos:[], refPhoto:null };
   DRAFT.lineItems.push(li); saveDraft();
   closeSheet(); editLine(DRAFT.lineItems.length-1,true);
@@ -979,6 +990,9 @@ window.editLine=function(i,isNew){
         <div class="hint">${GAUGE_HINTS[li.gauge]||''}</div></div>
       <div class="field"><label>Color</label><select onchange="lf(${i},'color',this.value)"><option value="">— pick a color —</option>${colorOptions(li.material,li.color)}</select></div>
     </div>
+    <div class="field"><label>Which side shows color? <span class="req-mark">*</span></label>
+      <div class="seg">${COLOR_SIDES.map(c=>`<button type="button" class="${li.colorSide===c.id?'on':''}" onclick="lf(${i},'colorSide','${c.id}');editLine(${i})">${c.label}</button>`).join('')}</div>
+      <div class="hint">Outside = street/curb side. Inside = building side. Both if painted on both faces.</div></div>
     <div class="field"><label>Stick length — max 10 ft <span title="The brake bed maxes out at 10 feet.">ⓘ</span></label>
       <div class="lenrow">
         <input id="len-ft" type="number" inputmode="numeric" min="0" max="10" value="${li.len.ft||''}" placeholder="0" oninput="setLen('ft',this.value)"><span class="unit">ft</span>
@@ -1055,6 +1069,7 @@ window.cancelLine=isNew=>{ if(isNew){DRAFT.lineItems.splice(EDIT_I,1);saveDraft(
 window.doneLine=()=>{ const li=DRAFT.lineItems[EDIT_I];
   if(!li.qtyOrdered){toast('How many pieces? Enter a quantity.');return}
   if(!li.color){toast('Pick a color for this piece.');return}
+  if(!li.colorSide){toast('Which side shows color \u2014 inside, outside, or both?');return}
   const tot=lenInches(li.len);
   if(tot<=0){toast('Set a stick length.');return}
   if(tot>MAX_STICK_IN){toast('Stick too long — max is 10\u2032 (120\u2033).');return}
@@ -1069,6 +1084,8 @@ window.submitOrder=async function(){
   if(!dv.lineItems.length)missing.push('at least one trim piece');
   const noColor=dv.lineItems.filter(l=>!l.color);
   if(noColor.length)missing.push('color on: '+noColor.map(l=>l.name).join(', '));
+  const noColorSide=dv.lineItems.filter(l=>!l.colorSide);
+  if(noColorSide.length)missing.push('which side shows color on: '+noColorSide.map(l=>l.name).join(', '));
   const noQty=dv.lineItems.filter(l=>!l.qtyOrdered);
   if(noQty.length)missing.push('quantity on: '+noQty.map(l=>l.name).join(', '));
   const badLen=dv.lineItems.filter(l=>lenInches(l.len)<=0||lenInches(l.len)>MAX_STICK_IN);
@@ -1246,7 +1263,7 @@ function renderOrderDetail(){
         ${canEdit?`<button class="btn ghost blue sm" onclick="editOrder()">✎ Edit order</button>
                    <button class="btn danger sm" onclick="cancelOrder()">Cancel order</button>`:''}
         ${ROLE==='requester'&&o.status==='ready'?`<button class="btn primary sm" onclick="officePickup()">✔ Mark ${o.fulfillment==='pickup'?'picked up':'delivered'}</button>`:''}
-        ${ROLE==='requester'?`<button class="btn ghost blue sm" onclick="reorder()">↻ Reorder this</button>`:''}
+        ${ROLE==='requester'?`<button class="btn ghost blue sm" onclick="reorder()">⎘ Duplicate order</button>`:''}
         <button class="btn ghost sm" onclick="printOrder()">🖨 Print</button>
       </div>
     </div>
@@ -1343,6 +1360,7 @@ window.confirmSchedule=function(){
 };
 async function applyStatus(st,note){
   CUR.status=st;
+  if(st==='ready') CUR.readyAcked=false;
   if(st!=='onhold'){CUR.holdReason='';CUR.holdNote=''}
   CUR.statusHistory=CUR.statusHistory||[];
   CUR.statusHistory.push({to:st,at:Date.now(),note:note||''});
@@ -1398,6 +1416,7 @@ function lineItemCard(li,i,o){
         <div style="font-size:.86rem;color:var(--grey2)">${esc(li.material||'')} ${esc(li.gauge)} · ${esc(li.color)} · ${lenStr(li.len)}</div>
         <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">
           ${li.built?'<span class="chip st-ready">Built ✓</span>':built>0?'<span class="chip st-production">Running</span>':'<span class="chip st-received">Not started</span>'}
+          ${li.colorSide?`<span class="chip fl-msg">Color: ${CS_LABEL[li.colorSide]}</span>`:''}
           ${flag?`<span class="chip fl-${flag}">${flag==='under'?'Short '+(li.qtyOrdered-built):flag==='over'?'Over +'+(built-li.qtyOrdered):'Count ✓'}</span>`:''}
           ${ROLE==='requester'&&lastFromShop?'<span class="chip fl-msg">Question for you</span>':''}
           ${ROLE==='shop'&&lastFromReq?'<span class="chip fl-msg">Reply from office</span>':''}
@@ -1567,7 +1586,7 @@ window.reorder=function(){
   c.shopTech='';c.qcBy='';c.qcDate='';c.deliveredBy='';c.deliveredDate='';
   c.lineItems.forEach(li=>{ li.id=uid(); li.runs=[]; li.built=false; li.messages=[]; li.photos=[] });
   DRAFT=c; saveDraft(); VIEW={name:'new'}; render();
-  toast('Copied — set a new need-by date and send it');
+  toast('Duplicated — review it, set a new need-by date, and send it');
 };
 window.editOrder=function(){ DRAFT=JSON.parse(JSON.stringify(CUR)); DRAFT._editing=CUR.id; VIEW={name:'new'}; render() };
 window.cancelOrder=function(){
@@ -1729,11 +1748,11 @@ window.sortSheet=k=>{ if(SHEET_SORT.key===k)SHEET_SORT.dir*=-1; else SHEET_SORT=
 function csvEsc(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v }
 window.exportCSV=async function(){
   if(!ALLORDERS)await loadAllOrders();
-  const head=['Order #','Project','Customer','Requester','Status','Received','Scheduled','Due','Hold Reason','Fulfillment','Material','Item','Gauge','Color','Stick Length','Dims','Qty Ordered','Qty Built','Run By','Line LF Ordered','Line LF Built','Notes'];
+  const head=['Order #','Project','Customer','Requester','Status','Received','Scheduled','Due','Hold Reason','Fulfillment','Material','Item','Gauge','Color','Color Side','Stick Length','Dims','Qty Ordered','Qty Built','Run By','Line LF Ordered','Line LF Built','Notes'];
   const lines=[head.join(',')];
   for(const o of ALLORDERS){ for(const li of o.lineItems){
     lines.push([o.num,o.projectName,o.gcClient||'',o.requesterName||'',ST_LABEL[o.status],o.orderDate,o.scheduledFor||'',o.dueDate,
-      o.status==='onhold'?(o.holdReason||''):'',o.fulfillment,li.material||o.metalBrand||'',li.name,li.gauge,li.color,lenStr(li.len),
+      o.status==='onhold'?(o.holdReason||''):'',o.fulfillment,li.material||o.metalBrand||'',li.name,li.gauge,li.color,CS_LABEL[li.colorSide]||'',lenStr(li.len),
       li.dims.filter(x=>x.w||x.s).map(x=>x.label+' '+dimStr(x)).join('; '),
       li.qtyOrdered,totalBuilt(li),[...new Set((li.runs||[]).map(r=>r.by).filter(Boolean))].join('; '),Math.round(li.qtyOrdered*lenInches(li.len)/12*10)/10,Math.round(totalBuilt(li)*lenInches(li.len)/12*10)/10,
       [o.specialNotes,li.notes].filter(Boolean).join(' | ')].map(csvEsc).join(','));
@@ -1784,12 +1803,19 @@ function downloadFile(name,content,type){
 }
 
 /* =====================================================================
-   AUTO-REFRESH + NEW-ORDER CHIME (Shop production portal)
-   Two layers, both on by default:
+   AUTO-REFRESH + IN-APP ALERTS (both portals)
+   Two refresh layers, both on by default:
    1. Supabase Realtime — pushes a change the instant it happens (needs
       Realtime turned on for kv_store in the Supabase dashboard).
    2. A 25s poll — a safety net that works even if step 1 isn't set up,
       or the realtime socket drops.
+   On top of refresh, this block watches for things this device's role
+   cares about (new orders / questions / replies / ready-for-pickup) and
+   surfaces them three ways, no email or server needed:
+   - a chime + toast the moment it happens
+   - a browser Notification (if the user granted permission via the 🔔
+     button in the top bar) — pops even if this tab isn't focused
+   - a "(N)" counter on the browser tab title
    ===================================================================== */
 let AUDIO_CTX=null;
 document.addEventListener('pointerdown', function unlock(){ try{ if(!AUDIO_CTX) AUDIO_CTX=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} document.removeEventListener('pointerdown',unlock); }, {once:true});
@@ -1806,21 +1832,71 @@ function playChime(){
   }catch(e){}
 }
 
-let KNOWN_ORDER_IDS=null;
-function seedKnownOrders(){ KNOWN_ORDER_IDS=new Set(INDEX.orders.map(o=>o.id)); }
+const BASE_TITLE='Nastase Trim Shop';
+function attentionCount(){
+  if(!ROLE) return 0;
+  const list=INDEX.orders.filter(s=>!['done','cancelled'].includes(s.status));
+  if(ROLE==='shop') return list.filter(s=>s.newReply).length;
+  return list.filter(s=>s.openQ||s.readyAlert).length;
+}
+function updateTitleBadge(){
+  const n=attentionCount();
+  document.title = n>0 ? `(${n}) ${BASE_TITLE}` : BASE_TITLE;
+}
+function notifyPermitted(){ return typeof Notification!=='undefined' && Notification.permission==='granted'; }
+window.enableNotifications=async function(){
+  if(typeof Notification==='undefined'){ toast('This browser doesn\u2019t support notifications.'); return; }
+  if(Notification.permission==='granted'){ toast('Alerts are already on for this browser.'); return; }
+  const perm=await Notification.requestPermission();
+  toast(perm==='granted' ? '\uD83D\uDD14 Alerts on \u2014 you\u2019ll get a popup for new activity.' : 'Alerts stayed off — you can still see the (N) badge in this tab and the flags on each order.');
+  render();
+};
+function fireNotification(title,body){
+  if(!notifyPermitted()) return;
+  try{ new Notification(title,{body,tag:'nastase-trim-shop'}); }catch(e){}
+}
+
+let KNOWN_STATE=null; // Map id -> {status, openQ, newReply}
+function seedKnownOrders(){
+  KNOWN_STATE=new Map(INDEX.orders.map(o=>[o.id,{status:o.status,openQ:o.openQ,newReply:o.newReply}]));
+  updateTitleBadge();
+}
 
 let POLL_BUSY=false;
 async function pollForNewOrders(){
   if(!SB_READY || POLL_BUSY) return;
   POLL_BUSY=true;
   try{
-    const prevIds=KNOWN_ORDER_IDS;
+    const prevState=KNOWN_STATE;
     await refreshIndex();
-    const newOnes = prevIds ? INDEX.orders.filter(o=>!prevIds.has(o.id)) : [];
+    const newOnes = prevState ? INDEX.orders.filter(o=>!prevState.has(o.id)) : [];
+    const becameReady = prevState ? INDEX.orders.filter(o=>{const p=prevState.get(o.id); return p&&p.status!=='ready'&&o.status==='ready'}) : [];
+    const newQuestion = prevState ? INDEX.orders.filter(o=>{const p=prevState.get(o.id); return p&&!p.openQ&&o.openQ}) : [];
+    const newReplyIn = prevState ? INDEX.orders.filter(o=>{const p=prevState.get(o.id); return p&&!p.newReply&&o.newReply}) : [];
     seedKnownOrders();
-    if(newOnes.length && ROLE==='shop'){
-      playChime();
-      toast(newOnes.length===1 ? '\uD83D\uDD14 New order \u2014 #'+newOnes[0].num : '\uD83D\uDD14 '+newOnes.length+' new orders in');
+
+    if(ROLE==='shop'){
+      if(newOnes.length){
+        playChime();
+        toast(newOnes.length===1 ? '\uD83D\uDD14 New order \u2014 #'+newOnes[0].num : '\uD83D\uDD14 '+newOnes.length+' new orders in');
+        fireNotification('New trim order', newOnes.length===1?('Order #'+newOnes[0].num+' — '+newOnes[0].projectName):(newOnes.length+' new orders came in'));
+      }
+      if(newReplyIn.length){
+        playChime();
+        toast('\uD83D\uDCAC Office replied on order #'+newReplyIn[0].num+(newReplyIn.length>1?' (+'+(newReplyIn.length-1)+' more)':''));
+        fireNotification('Office replied', newReplyIn.length===1?('Order #'+newReplyIn[0].num+' — '+newReplyIn[0].projectName):(newReplyIn.length+' orders have new replies'));
+      }
+    } else if(ROLE==='requester'){
+      if(newQuestion.length){
+        playChime();
+        toast('\u2753 Shop asked a question on order #'+newQuestion[0].num+(newQuestion.length>1?' (+'+(newQuestion.length-1)+' more)':''));
+        fireNotification('Shop has a question', newQuestion.length===1?('Order #'+newQuestion[0].num+' — '+newQuestion[0].projectName):(newQuestion.length+' orders have new questions'));
+      }
+      if(becameReady.length){
+        playChime();
+        toast('\uD83D\uDCE6 Order #'+becameReady[0].num+' is ready'+(becameReady.length>1?' (+'+(becameReady.length-1)+' more)':''));
+        fireNotification('Order ready for pickup', becameReady.length===1?('Order #'+becameReady[0].num+' — '+becameReady[0].projectName):(becameReady.length+' orders are ready'));
+      }
     }
     if(VIEW.name==='home') render();
   } finally { POLL_BUSY=false; }
@@ -1849,11 +1925,12 @@ function printSheet(o){
     <div>Status: <b>${ST_LABEL[o.status]}</b>${o.scheduledFor?' (sched '+fmtDate(o.scheduledFor)+')':''}${o.holdReason?' — HOLD: '+esc(o.holdReason):''}</div>
     <div>Order date: ${fmtDate(o.orderDate)} &nbsp; | &nbsp; Due: <b>${fmtDate(o.dueDate)}</b> &nbsp; | &nbsp; ${o.fulfillment==='pickup'?'PICKUP AT SHOP':'DELIVER: '+esc(o.deliveryAddress||o.jobAddress||'')}</div>
     ${o.specialNotes?`<div>Notes: ${esc(o.specialNotes)}</div>`:''}
-    <table><tr><th>Piece</th><th>Dimensions</th><th>Gauge / Color / Stick</th><th>Ordered</th><th>Runs</th><th>Built</th></tr>
+    <table><tr><th>Piece</th><th>Dimensions</th><th>Gauge / Color / Stick</th><th>Color Side</th><th>Ordered</th><th>Runs</th><th>Built</th></tr>
     ${o.lineItems.map(li=>`<tr>
       <td><b>${esc(li.name)}</b>${li.notes?'<br>'+esc(li.notes):''}</td>
       <td>${li.dims.filter(x=>x.w||x.s).map(x=>esc(x.label)+' '+dimStr(x)).join(', ')||'—'}</td>
       <td>${esc(li.material||o.metalBrand||'')} · ${esc(li.gauge)} / ${esc(li.color)} / ${lenStr(li.len)}</td>
+      <td><b>${CS_LABEL[li.colorSide]||'—'}</b></td>
       <td>${li.qtyOrdered}</td>
       <td>${(li.runs||[]).map(r=>r.qty).join(' + ')||'—'}</td>
       <td><b>${totalBuilt(li)}</b></td></tr>`).join('')}
